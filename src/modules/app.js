@@ -9,7 +9,8 @@
         'app.services',
         'angular-md5',
         'ngCookies',
-        'ngTable'
+        'ngTable',
+        'ui.bootstrap'
     ])
     
 

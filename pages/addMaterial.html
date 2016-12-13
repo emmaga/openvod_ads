@@ -1,14 +1,36 @@
 <div ng-controller="addMaterialController as addMaterial" style="position: absolute; top: 0; z-index: 1000; overflow: auto; height: 100%;background-color: rgba(0,0,0,.7);width: 100%;" ng-init="addMaterial.init()">
-    addMaterialController 添加广告素材 <br>
-    <button ng-click="addMaterial.cancel()">关闭</button> 
-    <form novalidate >
+    addMaterialController 添加广告素材
+    <br>
+    <button ng-click="addMaterial.cancel()">关闭</button>
+    <form novalidate ng-submit="addForm.$valid && addMaterial.save" name="addForm">
+        <div class="input-group">
+            <div class="row">
+                <div class="col-md-6">
+                    广告开始时间
+                    <p class="input-group">
+                        <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd H:m:ss" ng-model="addMaterial.chooseStartDate" is-open="addMaterial.showStartDatePicker" datepicker-options="addMaterial.dateOptions" ng-required="true" close-text="Close" />
+                        <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="addMaterial.showStartDate()"><i class="glyphicon glyphicon-calendar"></i></button>
+                  </span>
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    广告结束时间
+                    <p class="input-group">
+                        <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd H:m:ss" ng-model="addMaterial.chooseEndDate" is-open="addMaterial.showEndDatePicker" datepicker-options="addMaterial.dateOptions" ng-required="true" close-text="Close" />
+                        <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="addMaterial.showEndDate()"><i class="glyphicon glyphicon-calendar"></i></button>
+                  </span>
+                    </p>
+                </div>
+            </div>
+            
+        </div>
         <input type="file" name="" file-Model="adsFile" data-e="none"><br>
+        上传进度：<span ng-repeat="upload in addMaterial.uploadList.data track by $index">{{upload['file'].percentComplete}}</span>
+        <br>
+        文件列表：{{addMaterial.uploadList.data}}<br>
         <button class="btn btn-primary" ng-click="addMaterial.uploadAdsFile()">上传</button>
-        <input type="submit" name="" >
+        <input type="submit" name="">
     </form>
-    
-    
-    
-
-    
 </div>

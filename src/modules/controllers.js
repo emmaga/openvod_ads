@@ -218,6 +218,7 @@
             var self = this;
             self.init = function() {
                 self.getAdvTagList();
+                
             }
             // 获取广告素材标签列表
             self.getAdvTagList = function() {
@@ -265,6 +266,18 @@
 
             self.addMaterial = function(){
                 $scope.app.maskUrl = 'pages/addMaterial.html';
+            }
+
+            self.dateOptions = {
+                formatYear: 'yy',
+                maxDate: new Date(2020, 5, 22),
+                minDate: new Date(),
+                startingDay: 1
+            };
+            
+            
+            self.showDate = function(){
+                self.showDatePicker = true;
             }
 
 
@@ -324,7 +337,7 @@
     ])
 
 
-    .controller('addMaterialController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'CONFIG', 'util',
+    .controller('addMaterialController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'CONFIG',  'util',
         function($http, $scope, $state, $stateParams, $filter, NgTableParams, CONFIG, util) {
             console.log('addMaterialController')
             console.log($stateParams)
@@ -341,6 +354,27 @@
                 $scope.app.maskUrl = '';
             }
 
+            //********日期选择器，暂时不能精确到时分***********
+
+            self.dateOptions = {
+                formatYear: 'yy',
+                maxDate: new Date(2020, 5, 22),
+                startingDay: 1
+            };
+            self.showStartDate = function(){
+                self.showStartDatePicker = true;
+            }
+            self.showEndDate = function(){
+                self.showEndDatePicker = true;
+            }
+            //*******************
+            
+            // 上传广告素材
+            self.addMaterial = function(){
+               
+            }
+
+            // 上传广告库资料
             self.uploadAdsFile = function(){
                self.uploadList.uploadFile($scope.adsFile,self.uploadList);
             }
@@ -363,9 +397,13 @@
             }
 
             UploadLists.prototype = {
-                add: function(video, subtitle) {
-                    this.data.push({"video": video, "subtitle": subtitle, "id": this.maxId});
-                    return this.maxId++;
+                // 设置未当前选中的广告资料
+                set: function(file) {
+
+                    //先清空数组
+                    this.data =  [];
+                    this.data.push({"file": file, "id": this.maxId});
+                    return this.maxId;
                 },
                 setPercentById: function(type, id, percentComplete) {
                     for(var i =0; i < this.data.length; i++) {
@@ -416,86 +454,26 @@
                         }
                     }
                 },
-                transcode: function(id, o) {
-                    var o = o;
-                    var id = id;
-                    var l = this.data;
-                    var source = {};
-                    for(var i = 0; i <l.length; i++) {
-                        if (l[i].id == id) {
-                            source = l[i];
-                            break;
-                        }
-                    }
-                    // 转码
-                    var data = JSON.stringify({
-                        "action": "submitTranscodeTask",
-                        "token": util.getParams('token'),
-                        "rescode": "200",
-                        "data": {
-                            "movie": {
-                                "oriFileName": source.video.name,
-                                "filePath": source.video.src
-                            },
-                            "subtitle": {
-                                "oriFileName": source.subtitle.name,
-                                "filePath": source.subtitle.src
-                            }
-                        }
-                    })
-                    console&&console.log(data);
-                    $http({
-                        method: 'POST',
-                        url: util.getApiUrl('tanscodetask', '', 'server'),
-                        data: data
-                    }).then(function successCallback(response) {
-                        var msg = response.data;
-                        if (msg.rescode == '200') {
-                            console&&console.log('转码 ' + id);
-                            // 从列表中删除
-                            o.deleteById(id);
-                        } 
-                        else if(msg.rescode == '401') {
-                            alert('访问超时，请重新登录');
-                            $state.go('login');
-                        }
-                        else {
-                            // 转码申请失败后再次调用
-                            console&&console.log('转码申请失败后再次调用');
-                            setTimeout(function() {
-                                o.transcode(id, o);
-                            },5000);
-                            
-                        }
-                    }, function errorCallback(response) {
-                        // 转码申请失败后再次调用
-                        console&&console.log('转码申请失败后再次调用');
-                        console&&console.log(response);
-                        setTimeout(function() {
-                            o.transcode(id, o);
-                        },5000);
-                    });
-                },
-                uploadFile: function(file, obj) {
+                uploadFile: function(file, o) {
                     // 上传后台地址
                     var uploadUrl = CONFIG.uploadUrl;
 
-                    // 对象
-                    var videoXhr = new XMLHttpRequest();
-                    var video = {"name": videoFile.name, "size":videoFile.size, "percentComplete": 0, "xhr": videoXhr};
+                    // xhr对象
+                    var fileXhr = new XMLHttpRequest();
+                    // var video = {"name": videoFile.name, "size":videoFile.size, "percentComplete": 0, "xhr": videoXhr};
                     
                     // 添加data，并获取id
-                    var id = this.add(video, subtitle);
+                    var id = this.set(file);
 
                     // 上传视频
-                    util.uploadFileToUrl(videoXhr, videoFile, uploadUrl, 'normal',
+                    util.uploadFileToUrl(fileXhr, file, uploadUrl, 'normal',
                         // 上传中
                         function(evt) {
                           $scope.$apply(function(){
                             if (evt.lengthComputable) {
                               var percentComplete = Math.round(evt.loaded * 100 / evt.total);
                               // 更新上传进度
-                              o.setPercentById('video', id, percentComplete);
+                              o.setPercentById('file', id, percentComplete);
                             }
                           });
                         },
@@ -504,16 +482,17 @@
                             var ret = JSON.parse(xhr.responseText);
                             console && console.log(ret);
                             $scope.$apply(function(){
-                              o.setSrcSizeById('video', id, ret.filePath, ret.size);
+                              o.setSrcSizeById('file', id, ret.filePath, ret.size);
                               o.judgeCompleted(id, o);
                             });
+                            alert('上传成功');
                         },
                         // 上传失败
                         function(xhr) {
-                            $scope.$apply(function(){
-                              o.setPercentById('video', id, '失败');
-                            });
-                            xhr.abort();
+                            // $scope.$apply(function(){
+                            //   o.setPercentById('video', id, '失败');
+                            // });
+                            // xhr.abort();
                         }
                     );
                 }
