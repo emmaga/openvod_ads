@@ -1,0 +1,11 @@
+<div ng-controller="adsMaterialController as adsMaterial" ng-init="adsMaterial.init()" class="col-sm-9 page col-right">
+    广告素材<br>
+    <hr>
+        
+        <div ng-show="adsMaterial.loading">loading....</div>
+        <div ng-repeat="advTag in adsMaterial.advTagList track by $index">
+            {{advTag.TagName}}
+        </div>
+        <ui-view></ui-view>
+        <div ng-show="adsMaterial.noData">查无数据</div>
+</div>

@@ -1,0 +1,12 @@
+<div ng-controller="appController as app" ng-init="app.init()">
+    appController
+    <br>
+    <a ng-click="app.logout()">log out</a>
+    <br>
+    <a ng-click="app.goToState('app.adsBoard')">广告投放</a>
+    <br>
+    <a ng-click="app.goToState('app.adsMaterial')">广告素材</a>
+    <br>
+    <ui-view></ui-view>
+    <div ng-include="app.maskUrl" class="autoscroll"></div>
+</div>
