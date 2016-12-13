@@ -28,20 +28,27 @@
                 url: '/adsBoard',
                 templateUrl: 'pages/adsBoard.html'
             })
+            // 广告位列表
+            .state('app.adsBoard.adsPosition', {
+                url: '/adsPosition?adsPosition',
+                templateUrl: 'pages/adsPosition.html'
+            })
+            // 广告素材
             .state('app.adsMaterial', {
                 url: '/adsMaterial',
                 templateUrl: 'pages/adsMaterial.html'
             })
-            .state('app.editedList', {
-                url: '/editedList',
-                templateUrl: 'pages/editedList.html'
+            // 广告素材列表
+            .state('app.adsMaterial.materialList', {
+                url: '/materialList?advTag',
+                templateUrl: 'pages/materialList.html'
             })
     }])
 
 
     .constant('CONFIG', {
         serverUrl: 'http://openvod.cleartv.cn/backend_adv/v1/',
-        uploadImgUrl: 'http://mres.cleartv.cn/upload',
+        uploadUrl: 'http://mres.cleartv.cn/upload',
         testUrl: 'test/',
         test: false
     })

@@ -1,0 +1,14 @@
+<div ng-controller="addMaterialController as addMaterial" style="position: absolute; top: 0; z-index: 1000; overflow: auto; height: 100%;background-color: rgba(0,0,0,.7);width: 100%;" ng-init="addMaterial.init()">
+    addMaterialController 添加广告素材 <br>
+    <button ng-click="addMaterial.cancel()">关闭</button> 
+    <form novalidate >
+        <input type="file" name="" file-Model="adsFile" data-e="none"><br>
+        <button class="btn btn-primary" ng-click="addMaterial.uploadAdsFile()">上传</button>
+        <input type="submit" name="" >
+    </form>
+    
+    
+    
+
+    
+</div>
