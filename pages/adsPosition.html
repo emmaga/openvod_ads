@@ -1,6 +1,14 @@
 <div ng-controller="adsPositionController as adsPosition" ng-init="adsPosition.init()" class="col-sm-9 page col-right">
-    adsPositionController | 广告位列表<br>
-    
+    adsPositionController | 广告位列表<br> 
+    <button ng-click="adsPosition.addPosition()">添加广告位</button>
 
+
+
+
+    <div ng-repeat="position in adsPosition.advPositionList track by $index">
+    	{{position.Name}}--{{position.Description}}--{{position.AdvPositionTemplateName}}
+    </div>
+    <div ng-show="adsPosition.loading">loading...</div>
     <div ng-show="adsPosition.noData">查无数据</div>
+    <ui-view></ui-view>
 </div>

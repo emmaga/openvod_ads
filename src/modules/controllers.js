@@ -196,6 +196,7 @@
                             self.noData = true;
                             return;
                         }
+                        self.advPositionList = msg.data;
                     } else if (msg.rescode == "401") {
                         alert('访问超时，请重新登录');
                         $state.go('login');
@@ -209,6 +210,176 @@
                 })
             }
 
+            self.addPosition = function(){
+                $scope.app.maskUrl = 'pages/addPosition.html';
+            }
+
+        }
+    ])
+
+    .controller('addPositionController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'CONFIG',  'util',
+        function($http, $scope, $state, $stateParams, $filter, NgTableParams, CONFIG, util) {
+            console.log('addPositionController')
+            console.log($stateParams)
+            var self = this;
+            self.init = function() {
+                self.stateParams = $stateParams;
+                // 日期选择器 初始化 隐藏
+                self.startDatePicker = false;
+                self.endDatePicker = false;
+                // 表单需要提交的东西
+                self.form = {};
+                self.getAdvPositionTemplateList();
+                
+            }
+
+            self.cancel = function(){
+                $scope.app.maskUrl = '';
+            }
+
+            // 添加广告位
+            self.addAdvPosition = function(){
+                if (!self.form.LifeStartTime) {
+                    alert("请选择开始时间");
+                    return;
+                }
+                self.form.LifeStartTime= $filter('date')(self.form.LifeStartTime,'yyyy-MM-dd HH:mm:ss')
+                if (!self.form.LifeEndTime) {
+                    alert("请选择结束时间");
+                    return;
+                }
+                self.saving = true;
+                var data = {
+                    "action": "addAdvPosition",
+                    "token": util.getParams("token"),
+                    "data": {
+                        "LifeEndTime": $filter('date')(self.form.LifeEndTime,'yyyy-MM-dd HH:mm:ss'),
+                        "LifeStartTime": $filter('date')(self.form.LifeStartTime,'yyyy-MM-dd HH:mm:ss'),
+                        "Description": self.form.Description,
+                        "ScheduleTypeParam": self.form.ScheduleTypeParam,
+                        "ScheduleType": self.form.ScheduleType,
+                        "Name": self.form.Name,
+                        "AdvPositionTemplateName": self.form.AdvPositionTemplate.AdvPositionTemplateName
+                    }
+
+                    
+                };
+                data = JSON.stringify(data);
+                $http({
+                    method: $filter('ajaxMethod')(),
+                    url: util.getApiUrl('position', 'shopList', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var msg = response.data;
+                    if (msg.rescode == '200') {
+                        alert("广告位添加成功");
+                        $state.reload('app.adsBoard.adsPosition')
+                        self.cancel();
+                    } else if (msg.rescode == "401") {
+                        alert('访问超时，请重新登录');
+                        $state.go('login');
+                    } else {
+                        alert(msg.rescode + ' ' + msg.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert(response.status + ' 服务器出错');
+                }).finally(function(value) {
+                    self.saving = false;
+                })
+            }
+
+            // 获取广告位模版列表
+            self.getAdvPositionTemplateList = function(){
+                self.loading = true;
+                var data = {
+                    "action": "getAdvPositionTemplateList",
+                    "token": util.getParams("token"),
+                    "data":{}
+                };
+                data = JSON.stringify(data);
+                $http({
+                    method: $filter('ajaxMethod')(),
+                    url: util.getApiUrl('position', 'shopList', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var msg = response.data;
+                    if (msg.rescode == '200') {
+                        if (msg.data == 0) {
+                            self.noData = true;
+                            return;
+                        }
+                        self.templateList = msg.data;
+                    } else if (msg.rescode == "401") {
+                        alert('访问超时，请重新登录');
+                        $state.go('login');
+                    } else {
+                        alert(msg.rescode + ' ' + msg.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert(response.status + ' 服务器出错');
+                }).finally(function(value) {
+                    self.loading = false;
+                })
+            }
+            //=====日历选择器=============================
+            // 弹出体力选择器
+            self.showDatePicker = function(start) {
+                if (start == 'start') {
+                    self.startDatePicker = true;
+                    self.endDatePicker = false;
+                }  else {
+                    self.startDatePicker = false;
+                    self.endDatePicker = true;
+                }
+                
+            }
+            self.onTimeSet  = function(start) {
+              if (start == 'start') {
+                  self.startDatePicker = false;
+              }  else {
+                  self.endDatePicker = false;
+              }
+            }
+            //=====日历选择器=============================
+
+
+         
+            
+
+           
+           
+        }
+    ])
+
+    // datetimepicker作用域问题，没有独立作用域，暂时这样处理：增加了两个控制器
+    .controller('lifeStartTimeController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'CONFIG',  'util',
+        function($http, $scope, $state, $stateParams, $filter, NgTableParams, CONFIG, util) {
+            console.log('lifeStartTimeController')
+            console.log($stateParams)
+            var self = this;
+            self.init = function() {
+            }
+
+            self.cancel = function(){
+                $scope.app.maskUrl = '';
+            }
+
+           
+        }
+    ])
+
+    .controller('lifeEndTimeController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'CONFIG',  'util',
+        function($http, $scope, $state, $stateParams, $filter, NgTableParams, CONFIG, util) {
+            console.log('lifeEndTimeController')
+            console.log($stateParams)
+            var self = this;
+            self.init = function() {
+            }
+
+            self.cancel = function(){
+            }
+
+           
         }
     ])
 

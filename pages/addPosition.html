@@ -1,0 +1,30 @@
+<div ng-controller="addPositionController as addPosition" style="position: absolute; top: 0; z-index: 1000; overflow: auto; height: 100%;width: 100%; background-color: rgba(0,0,0,.6);" ng-init="addPosition.init()">
+    addPositionController 添加广告位
+    <br>
+    <br>
+    <button ng-click="addPosition.cancel()">关闭</button>
+    <form novalidate ng-submit="addForm.$valid && addPosition.addAdvPosition()" name="addForm">
+        <select ng-options="(template.AdvPositionTemplateName+template.AdvPositionTemplateDesc) for template in addPosition.templateList " ng-model="addPosition.form.AdvPositionTemplate" required></select>
+        <br> 名字：
+        <input type="text" name="" required ng-model="addPosition.form.Name">
+        <br> 描述：
+        <input type="text" name="" required ng-model="addPosition.form.Description">
+        <br> ScheduleTypeParam：
+        <input type="text" name="" required ng-model="addPosition.form.ScheduleTypeParam">
+        <br> ScheduleType：
+        <input type="text" name="" required ng-model="addPosition.form.ScheduleType">
+        <br>
+        <!-- datetimepicker作用域问题，没有独立作用域，暂时这样处理 -->
+        <div class="row">
+            <div ng-controller="lifeStartTimeController as lst" class="col-md-6">
+                广告开始日期:<i class="glyphicon glyphicon-calendar" ng-click="addPosition.showDatePicker('start')"></i> {{ addPosition.form.LifeStartTime | date:'yyyy-MM-dd hh:mm:ss' }}
+                <datetimepicker data-ng-model="addPosition.form.LifeStartTime" data-datetimepicker-config="{ startView:'day', minView:'minute' }" ng-show="addPosition.startDatePicker" data-on-set-time="addPosition.onTimeSet('start')" />
+            </div>
+            <div ng-controller="lifeEndTimeController as let" class="col-md-6">
+                广告结束日期:<i class="glyphicon glyphicon-calendar" ng-click="addPosition.showDatePicker()"></i> {{ addPosition.form.LifeEndTime | date:'yyyy-MM-dd hh:mm:ss' }}
+                <datetimepicker data-ng-model="addPosition.form.LifeEndTime" data-datetimepicker-config="{ startView:'day', minView:'minute' }" ng-show="addPosition.endDatePicker" data-on-set-time="addPosition.onTimeSet()" />
+            </div>
+        </div>
+        <input type="submit" name="" ng-disabled="addForm.$invalid || addPosition.saving" class="btn btn-primary">
+    </form>
+</div>

@@ -10,7 +10,8 @@
         'angular-md5',
         'ngCookies',
         'ngTable',
-        'ui.bootstrap'
+        'ui.bootstrap',
+        'ui.bootstrap.datetimepicker'
     ])
     
 
@@ -30,6 +31,11 @@
                 templateUrl: 'pages/adsBoard.html'
             })
             // 广告位列表
+            .state('app.adsBoard.adsPosition', {
+                url: '/adsPosition?adsPosition',
+                templateUrl: 'pages/adsPosition.html'
+            })
+            // 广告位对应的广告列表
             .state('app.adsBoard.adsPosition', {
                 url: '/adsPosition?adsPosition',
                 templateUrl: 'pages/adsPosition.html'
