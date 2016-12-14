@@ -1,0 +1,28 @@
+<div ng-controller="positionAddAdvController as pAA" style="position: absolute; top: 0; z-index: 1000; overflow: auto; height: 100%;background-color: rgba(0,0,0,.7);width: 100%;" ng-init="pAA.init()">
+    positionAddAdvController 广告位 添加广告素材
+    <br>
+    <button ng-click="pAA.cancel()" class="btn btn-primary">关闭</button>
+    <br>
+    <div ng-show="pAA.loading">Loading...</div>
+    <table ng-table="pAA.tableParams">
+        <thead>
+            <tr>
+                <!--  <th>名称</th>
+                <th>类型</th>
+                <th>产地</th>
+                <th>操作</th> -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="material in $data track by $index">
+                <td data-title="'复选框'">
+                    <input type="checkbox" name="" ng-checked="pAA.checkStatus(material.ID,pAA.adsList) " ng-model="this.value" ng-click="pAA.changeStatus(this.value,material.ID)" >
+                </td>
+                <td data-title="'名字'">
+                    {{material.Name}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <input type="button" name="" ng-click="pAA.addAdvPositionAdvMatrix();" ng-disabled="pAA.saving" value="保存">
+    <div ng-show="pAA.noData">查无数据</div>
+</div>

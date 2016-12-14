@@ -217,7 +217,7 @@
         }
     ])
 
-    .controller('addPositionController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'CONFIG',  'util',
+    .controller('addPositionController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'CONFIG', 'util',
         function($http, $scope, $state, $stateParams, $filter, NgTableParams, CONFIG, util) {
             console.log('addPositionController')
             console.log($stateParams)
@@ -230,20 +230,20 @@
                 // 表单需要提交的东西
                 self.form = {};
                 self.getAdvPositionTemplateList();
-                
+
             }
 
-            self.cancel = function(){
+            self.cancel = function() {
                 $scope.app.maskUrl = '';
             }
 
             // 添加广告位
-            self.addAdvPosition = function(){
+            self.addAdvPosition = function() {
                 if (!self.form.LifeStartTime) {
                     alert("请选择开始时间");
                     return;
                 }
-                self.form.LifeStartTime= $filter('date')(self.form.LifeStartTime,'yyyy-MM-dd HH:mm:ss')
+                self.form.LifeStartTime = $filter('date')(self.form.LifeStartTime, 'yyyy-MM-dd HH:mm:ss')
                 if (!self.form.LifeEndTime) {
                     alert("请选择结束时间");
                     return;
@@ -253,8 +253,8 @@
                     "action": "addAdvPosition",
                     "token": util.getParams("token"),
                     "data": {
-                        "LifeEndTime": $filter('date')(self.form.LifeEndTime,'yyyy-MM-dd HH:mm:ss'),
-                        "LifeStartTime": $filter('date')(self.form.LifeStartTime,'yyyy-MM-dd HH:mm:ss'),
+                        "LifeEndTime": $filter('date')(self.form.LifeEndTime, 'yyyy-MM-dd HH:mm:ss'),
+                        "LifeStartTime": $filter('date')(self.form.LifeStartTime, 'yyyy-MM-dd HH:mm:ss'),
                         "Description": self.form.Description,
                         "ScheduleTypeParam": self.form.ScheduleTypeParam,
                         "ScheduleType": self.form.ScheduleType,
@@ -262,7 +262,7 @@
                         "AdvPositionTemplateName": self.form.AdvPositionTemplate.AdvPositionTemplateName
                     }
 
-                    
+
                 };
                 data = JSON.stringify(data);
                 $http({
@@ -289,13 +289,93 @@
             }
 
             // 获取广告位模版列表
-            self.getAdvPositionTemplateList = function(){
+            self.getAdvPositionTemplateList = function() {
+                    self.loading = true;
+                    var data = {
+                        "action": "getAdvPositionTemplateList",
+                        "token": util.getParams("token"),
+                        "data": {}
+                    };
+                    data = JSON.stringify(data);
+                    $http({
+                        method: $filter('ajaxMethod')(),
+                        url: util.getApiUrl('position', 'shopList', 'server'),
+                        data: data
+                    }).then(function successCallback(response) {
+                        var msg = response.data;
+                        if (msg.rescode == '200') {
+                            if (msg.data == 0) {
+                                self.noData = true;
+                                return;
+                            }
+                            self.templateList = msg.data;
+                        } else if (msg.rescode == "401") {
+                            alert('访问超时，请重新登录');
+                            $state.go('login');
+                        } else {
+                            alert(msg.rescode + ' ' + msg.errInfo);
+                        }
+                    }, function errorCallback(response) {
+                        alert(response.status + ' 服务器出错');
+                    }).finally(function(value) {
+                        self.loading = false;
+                    })
+                }
+
+                //=====日历选择器=============================
+                // 弹出体力选择器
+
+
+            self.showDatePicker = function(start) {
+                if (start == 'start') {
+                    self.startDatePicker = true;
+                    self.endDatePicker = false;
+                } else {
+                    self.startDatePicker = false;
+                    self.endDatePicker = true;
+                }
+
+            }
+            self.onTimeSet = function(start) {
+                    if (start == 'start') {
+                        self.startDatePicker = false;
+                    } else {
+                        self.endDatePicker = false;
+                    }
+                }
+
+             //=====日历选择器=============================
+
+
+
+
+
+
+
+        }
+    ])
+
+    .controller('adsListController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'util',
+        function($http, $scope, $state, $stateParams, $filter, NgTableParams, util) {
+            console.log('adsListController')
+            console.log($stateParams)
+            var self = this;
+            self.init = function() {
+                self.stateParams = $stateParams;
+                self.getAdvPositionAdvMatrix();
+            }
+
+            // 获取广告位广告列表
+            self.getAdvPositionAdvMatrix = function() {
                 self.loading = true;
                 var data = {
-                    "action": "getAdvPositionTemplateList",
+                    "action": "getAdvPositionAdvMatrix",
                     "token": util.getParams("token"),
-                    "data":{}
+                    "data": {
+                        "PositionID": self.stateParams.PostionID - 0
+                    }
                 };
+
                 data = JSON.stringify(data);
                 $http({
                     method: $filter('ajaxMethod')(),
@@ -304,11 +384,11 @@
                 }).then(function successCallback(response) {
                     var msg = response.data;
                     if (msg.rescode == '200') {
-                        if (msg.data == 0) {
+                        if (msg.data.length == 0) {
                             self.noData = true;
                             return;
                         }
-                        self.templateList = msg.data;
+                        self.adsList = msg.data;
                     } else if (msg.rescode == "401") {
                         alert('访问超时，请重新登录');
                         $state.go('login');
@@ -321,32 +401,194 @@
                     self.loading = false;
                 })
             }
-            //=====日历选择器=============================
-            // 弹出体力选择器
-            self.showDatePicker = function(start) {
-                if (start == 'start') {
-                    self.startDatePicker = true;
-                    self.endDatePicker = false;
-                }  else {
-                    self.startDatePicker = false;
-                    self.endDatePicker = true;
-                }
-                
+
+            // 广告位添加广告
+            self.positionAddAdv = function() {
+                $scope.app.maskUrl = 'pages/positionAddAdv.html';
             }
-            self.onTimeSet  = function(start) {
-              if (start == 'start') {
-                  self.startDatePicker = false;
-              }  else {
-                  self.endDatePicker = false;
-              }
-            }
-            //=====日历选择器=============================
 
 
-         
+        }
+    ])
+
+    // 广告位添加广告
+    .controller('positionAddAdvController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'CONFIG',  'util',
+        function($http, $scope, $state, $stateParams, $filter, NgTableParams, CONFIG, util) {
+            console.log('positionAddAdvController')
+            console.log($stateParams)
+            var self = this;
+            self.init = function() {
+                self.stateParams = $stateParams;
+                // 广告位 选中的 广告
+                self.form = {};
+                self.getMaterialList();
+                self.getAdvPositionAdvMatrix();
+            }
+
+            self.cancel = function(){
+                $scope.app.maskUrl = '';
+            }
+
+
+     
             
+            // 获取广告列表 根据广告标签来搜索，空数组查询所有 , 来获取广告素材列表
+            self.getMaterialList = function(){
+                self.loading = true;
+                self.tableParams = new NgTableParams({
+                    page: 1,
+                    count: 10,
+                    url: ''
+                }, {
+                    counts: [10,20],
+                    getData: function (params) {
+                        var data = {
+                            "action": "getMaterialList",
+                            "token": util.getParams("token"),
+                            "AdvTags":[]
+                            
+                        }
+                        var paramsUrl = params.url();
+                        data.count = paramsUrl.count + '';
+                        data.page = paramsUrl.page  + '';
+                        // if (self.stateParams.advTag == 'all') {
+                        //     // 空数组查询所有
+                        //     data.AdvTags = [];
+                        // } else {
+                        //     data.AdvTags = [self.stateParams.advTag - 0];
+                        // }
+                        data = JSON.stringify(data);
+                        return $http({
+                            method: $filter('ajaxMethod')(),
+                            url: util.getApiUrl('material', 'shopList', 'server'),
+                            data: data
+                        }).then(function successCallback(response) {
+                            var msg = response.data;
+                            if (msg.rescode == '200') {
+                                // if (msg.data.materialList == 0) {
+                                //     self.noData = true;
+                                //     return;
+                                // }
+                                params.total(msg.data.materialList);
+                                return msg.data.materialList;
+                            } else if (msg.rescode == "401") {
+                                alert('访问超时，请重新登录');
+                                $state.go('login');
+                            } else {
+                                alert(msg.rescode + ' ' + msg.errInfo);
+                            }
+                        }, function errorCallback(response) {
+                            alert(response.status + ' 服务器出错');
+                        }).finally(function(value) {
+                            self.loading = false;
+                        })
+                    }
+                });
+            }
 
-           
+            // 获取广告位广告列表
+            self.getAdvPositionAdvMatrix = function() {
+                self.loading = true;
+                var data = {
+                    "action": "getAdvPositionAdvMatrix",
+                    "token": util.getParams("token"),
+                    "data": {
+                        "PositionID": self.stateParams.PostionID - 0
+                    }
+                };
+
+                data = JSON.stringify(data);
+                $http({
+                    method: $filter('ajaxMethod')(),
+                    url: util.getApiUrl('position', 'shopList', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var msg = response.data;
+                    if (msg.rescode == '200') {
+                        self.adsList = msg.data;
+                        self.adsListArr = self.getArray(self.adsList,'AdvID')
+                    } else if (msg.rescode == "401") {
+                        alert('访问超时，请重新登录');
+                        $state.go('login');
+                    } else {
+                        alert(msg.rescode + ' ' + msg.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert(response.status + ' 服务器出错');
+                }).finally(function(value) {
+                    self.loading = false;
+                })
+            }
+
+            
+            // 广告位检测某广告是否已经选中
+            self.checkStatus = function(id,list){
+                 for (var i = 0; i < list.length; i++) {
+                     if (list[i].AdvID == id) {
+                        return true;
+                     }
+                 }
+            }
+
+            // 广告位 更改 某广告 是否选中
+            self.changeStatus = function(bool,id){
+                 var index = self.adsListArr.indexOf(id)
+                 if (bool) {
+                    self.adsListArr.push(id)
+                 } else {
+                    self.adsListArr.splice(index,1)
+                 }
+            }
+
+            // 广告位 添加 广告
+            self.addAdvPositionAdvMatrix = function() {
+                self.saving = true;
+                var data = {
+                    "action": "addAdvPositionAdvMatrix",
+                    "token": util.getParams("token"),
+                    "data": {
+                        "PositionID":self.stateParams.PostionID - 0,
+                        "AdvID":self.adsListArr,
+                        // todo 参数意思
+                        "ScheduleParam":""
+                    }
+                };
+
+                data = JSON.stringify(data);
+                $http({
+                    method: $filter('ajaxMethod')(),
+                    url: util.getApiUrl('position', 'shopList', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var msg = response.data;
+                    if (msg.rescode == '200') {
+                        alert('保存成功');
+                        self.cancel();
+                        $state.reload('app.adsBoard.adsPosition.adsList',{PostionID:self.stateParams.PostionID})
+                    } else if (msg.rescode == "401") {
+                        alert('访问超时，请重新登录');
+                        $state.go('login');
+                    } else {
+                        alert(msg.rescode + ' ' + msg.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert(response.status + ' 服务器出错');
+                }).finally(function(value) {
+                    self.saving = false;
+                })
+            }
+            // 提取出数组
+            self.getArray = function(arr, key) {
+                var flag = [];
+                for (var i = 0; i < arr.length; i++) {
+                    flag.push(arr[i][key])
+                }
+                return flag;
+            }
+
+
+
+
            
         }
     ])

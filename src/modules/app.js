@@ -36,9 +36,9 @@
                 templateUrl: 'pages/adsPosition.html'
             })
             // 广告位对应的广告列表
-            .state('app.adsBoard.adsPosition', {
-                url: '/adsPosition?adsPosition',
-                templateUrl: 'pages/adsPosition.html'
+            .state('app.adsBoard.adsPosition.adsList', {
+                url: '/adsList?PostionID',
+                templateUrl: 'pages/adsList.html'
             })
             // 广告素材
             .state('app.adsMaterial', {

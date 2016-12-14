@@ -5,7 +5,7 @@
 
 
 
-    <div ng-repeat="position in adsPosition.advPositionList track by $index">
+    <div ng-repeat="position in adsPosition.advPositionList track by $index" ui-sref="app.adsBoard.adsPosition.adsList({PostionID:position.ID})">
     	{{position.Name}}--{{position.Description}}--{{position.AdvPositionTemplateName}}
     </div>
     <div ng-show="adsPosition.loading">loading...</div>

@@ -1,0 +1,10 @@
+<div   ng-controller="adsListController as adsList" ng-init="adsList.init()">
+    adsList广告位对应的广告列表<br/>
+        <button ng-click="adsList.positionAddAdv();">添加</button>
+        <div ng-show="adsList.loading">Loading...</div>
+        <div ng-repeat="ad in adsList.adsList track by $index">
+            ID: {{ad.AdvID}}
+        </div>
+        <div ng-show="adsList.noData">查无数据</div>
+
+</div>
