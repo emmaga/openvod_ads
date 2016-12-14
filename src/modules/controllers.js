@@ -243,7 +243,6 @@
                     alert("请选择开始时间");
                     return;
                 }
-                self.form.LifeStartTime = $filter('date')(self.form.LifeStartTime, 'yyyy-MM-dd HH:mm:ss')
                 if (!self.form.LifeEndTime) {
                     alert("请选择结束时间");
                     return;
@@ -261,8 +260,6 @@
                         "Name": self.form.Name,
                         "AdvPositionTemplateName": self.form.AdvPositionTemplate.AdvPositionTemplateName
                     }
-
-
                 };
                 data = JSON.stringify(data);
                 $http({
@@ -564,6 +561,7 @@
                     if (msg.rescode == '200') {
                         alert('保存成功');
                         self.cancel();
+                        // 选中的广告位广告列表
                         $state.reload('app.adsBoard.adsPosition.adsList',{PostionID:self.stateParams.PostionID})
                     } else if (msg.rescode == "401") {
                         alert('访问超时，请重新登录');
@@ -749,7 +747,7 @@
         }
     ])
 
-
+    // 上传广告素材
     .controller('addMaterialController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'CONFIG',  'util',
         function($http, $scope, $state, $stateParams, $filter, NgTableParams, CONFIG, util) {
             console.log('addMaterialController')
@@ -757,8 +755,9 @@
             var self = this;
             self.init = function() {
                 self.stateParams = $stateParams;
-                // self.getMaterialList();
 
+                // 需要上传的东西
+                self.form = {};
                 // 初始化上传列表对象
                 self.uploadList = new UploadLists();
             }
@@ -767,28 +766,95 @@
                 $scope.app.maskUrl = '';
             }
 
-            //********日期选择器，暂时不能精确到时分***********
+            //=====日历选择器=============================
+            // 弹出体力选择器
 
-            self.dateOptions = {
-                formatYear: 'yy',
-                maxDate: new Date(2020, 5, 22),
-                startingDay: 1
-            };
-            self.showStartDate = function(){
-                self.showStartDatePicker = true;
+
+            self.showDatePicker = function(start) {
+                if (start == 'start') {
+                    self.startDatePicker = true;
+                    self.endDatePicker = false;
+                } else {
+                    self.startDatePicker = false;
+                    self.endDatePicker = true;
+                }
+
             }
-            self.showEndDate = function(){
-                self.showEndDatePicker = true;
+            self.onTimeSet = function(start) {
+                if (start == 'start') {
+                    self.startDatePicker = false;
+                } else {
+                    self.endDatePicker = false;
+                }
             }
-            //*******************
+
+            //=====日历选择器=============================
+
+
             
             // 上传广告素材
-            self.addMaterial = function(){
+            self.saveForm = function(){
+                if (self.uploadList.data.length == 0) {
+                    alert('请先上传图片');
+                    return;
+                }
+                if (!self.form.LifeStartTime) {
+                    alert("请选择开始时间");
+                    return;
+                }
+                if (!self.form.LifeEndTime) {
+                    alert("请选择结束时间");
+                    return;
+                }
+                self.saving = true;
+              var file = self.uploadList.data[0].file
+               var data = {
+                   "action": "addMaterial",
+                   "token": util.getParams("token"),
+                   "data": {
+                       "URLRelative": "",
+                       "LifeEndTime": $filter('date')(self.form.LifeEndTime, 'yyyy-MM-dd HH:mm:ss'),
+                       "Name": self.form.Name,
+                       "URL": file.src,
+                       "LifeStartTime": $filter('date')(self.form.LifeStartTime, 'yyyy-MM-dd HH:mm:ss'),
+                       "Duration": self.form.Duration,
+                       "Description": self.form.Description,
+                       "Size": file.size
+                   }
+
+               }
+
                
+               data = JSON.stringify(data);
+               $http({
+                   method: $filter('ajaxMethod')(),
+                   url: util.getApiUrl('material', 'shopList', 'server'),
+                   data: data
+               }).then(function successCallback(response) {
+                   var msg = response.data;
+                   if (msg.rescode == '200') {
+                       alert('添加成功');
+                       self.cancel();
+                       $state.reload('app.adsMaterial.materialList');
+                   } else if (msg.rescode == "401") {
+                       alert('访问超时，请重新登录');
+                       $state.go('login');
+                   } else {
+                       alert(msg.rescode + ' ' + msg.errInfo);
+                   }
+               }, function errorCallback(response) {
+                   alert(response.status + ' 服务器出错');
+               }).finally(function(value) {
+                   self.saving = false;
+               })
             }
 
             // 上传广告库资料
             self.uploadAdsFile = function(){
+                if (!$scope.adsFile) {
+                    alert('请选择图片');
+                    return;
+                }
                self.uploadList.uploadFile($scope.adsFile,self.uploadList);
             }
             
@@ -895,7 +961,7 @@
                             var ret = JSON.parse(xhr.responseText);
                             console && console.log(ret);
                             $scope.$apply(function(){
-                              o.setSrcSizeById('file', id, ret.filePath, ret.size);
+                              o.setSrcSizeById('file', id, ret.upload_path, ret.size);
                               o.judgeCompleted(id, o);
                             });
                             alert('上传成功');
