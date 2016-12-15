@@ -826,8 +826,9 @@
                 $scope.app.maskUrl = 'pages/addMaterial.html';
             }
 
-            self.editMaterial = function(){
+            self.editMaterial = function(material){
                 $scope.app.maskUrl = 'pages/editMaterial.html';
+                $scope.app.params = material;
             }
 
             self.dateOptions = {
@@ -899,7 +900,7 @@
     ])
 
     // 上传广告素材
-    .controller('addMaterialController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'CONFIG',  'util',
+    .controller('addMaterialController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'CONFIG', 'util',
         function($http, $scope, $state, $stateParams, $filter, NgTableParams, CONFIG, util) {
             console.log('addMaterialController')
             console.log($stateParams)
@@ -913,7 +914,7 @@
                 self.uploadList = new UploadLists();
             }
 
-            self.cancel = function(){
+            self.cancel = function() {
                 $scope.app.maskUrl = '';
             }
 
@@ -942,9 +943,9 @@
             //=====日历选择器=============================
 
 
-            
+
             // 上传广告素材
-            self.saveForm = function(){
+            self.saveForm = function() {
                 if (self.uploadList.data.length == 0) {
                     alert('请先上传图片');
                     return;
@@ -958,57 +959,57 @@
                     return;
                 }
                 self.saving = true;
-              var file = self.uploadList.data[0].file
-               var data = {
-                   "action": "addMaterial",
-                   "token": util.getParams("token"),
-                   "data": {
-                       "URLRelative": "",
-                       "LifeEndTime": $filter('date')(self.form.LifeEndTime, 'yyyy-MM-dd HH:mm:ss'),
-                       "Name": self.form.Name,
-                       "URL": file.src,
-                       "LifeStartTime": $filter('date')(self.form.LifeStartTime, 'yyyy-MM-dd HH:mm:ss'),
-                       "Duration": self.form.Duration,
-                       "Description": self.form.Description,
-                       "Size": file.size
-                   }
+                var file = self.uploadList.data[0].file
+                var data = {
+                    "action": "addMaterial",
+                    "token": util.getParams("token"),
+                    "data": {
+                        "URLRelative": "",
+                        "LifeEndTime": $filter('date')(self.form.LifeEndTime, 'yyyy-MM-dd HH:mm:ss'),
+                        "Name": self.form.Name,
+                        "URL": file.src,
+                        "LifeStartTime": $filter('date')(self.form.LifeStartTime, 'yyyy-MM-dd HH:mm:ss'),
+                        "Duration": self.form.Duration,
+                        "Description": self.form.Description,
+                        "Size": file.size
+                    }
 
-               }
+                }
 
-               
-               data = JSON.stringify(data);
-               $http({
-                   method: $filter('ajaxMethod')(),
-                   url: util.getApiUrl('material', 'shopList', 'server'),
-                   data: data
-               }).then(function successCallback(response) {
-                   var msg = response.data;
-                   if (msg.rescode == '200') {
-                       alert('添加成功');
-                       self.cancel();
-                       $state.reload('app.adsMaterial.materialList');
-                   } else if (msg.rescode == "401") {
-                       alert('访问超时，请重新登录');
-                       $state.go('login');
-                   } else {
-                       alert(msg.rescode + ' ' + msg.errInfo);
-                   }
-               }, function errorCallback(response) {
-                   alert(response.status + ' 服务器出错');
-               }).finally(function(value) {
-                   self.saving = false;
-               })
+
+                data = JSON.stringify(data);
+                $http({
+                    method: $filter('ajaxMethod')(),
+                    url: util.getApiUrl('material', 'shopList', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var msg = response.data;
+                    if (msg.rescode == '200') {
+                        alert('添加成功');
+                        self.cancel();
+                        $state.reload('app.adsMaterial.materialList');
+                    } else if (msg.rescode == "401") {
+                        alert('访问超时，请重新登录');
+                        $state.go('login');
+                    } else {
+                        alert(msg.rescode + ' ' + msg.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert(response.status + ' 服务器出错');
+                }).finally(function(value) {
+                    self.saving = false;
+                })
             }
 
             // 上传广告库资料
-            self.uploadAdsFile = function(){
+            self.uploadAdsFile = function() {
                 if (!$scope.adsFile) {
                     alert('请选择图片');
                     return;
                 }
-               self.uploadList.uploadFile($scope.adsFile,self.uploadList);
+                self.uploadList.uploadFile($scope.adsFile, self.uploadList);
             }
-            
+
 
             //广告素材 上传
             function UploadLists() {
@@ -1031,21 +1032,21 @@
                 set: function(file) {
 
                     //先清空数组
-                    this.data =  [];
-                    this.data.push({"file": file, "id": this.maxId});
+                    this.data = [];
+                    this.data.push({ "file": file, "id": this.maxId });
                     return this.maxId;
                 },
                 setPercentById: function(type, id, percentComplete) {
-                    for(var i =0; i < this.data.length; i++) {
-                        if(this.data[i].id == id) {
+                    for (var i = 0; i < this.data.length; i++) {
+                        if (this.data[i].id == id) {
                             this.data[i][type].percentComplete = percentComplete;
                             break;
                         }
                     }
                 },
                 setSrcSizeById: function(type, id, src, size) {
-                    for(var i =0; i < this.data.length; i++) {
-                        if(this.data[i].id == id) {
+                    for (var i = 0; i < this.data.length; i++) {
+                        if (this.data[i].id == id) {
                             this.data[i][type].src = src;
                             this.data[i][type].size = size;
                             break;
@@ -1054,15 +1055,15 @@
                 },
                 deleteById: function(id) {
                     var l = this.data;
-                    for(var i = 0; i <l.length; i++) {
+                    for (var i = 0; i < l.length; i++) {
                         if (l[i].id == id) {
                             // 如果正在上传，取消上传
                             // 视频
-                            if(l[i].video.percentComplete < 100 && l[i].video.percentComplete != '失败') {
+                            if (l[i].video.percentComplete < 100 && l[i].video.percentComplete != '失败') {
                                 l[i].video.xhr.abort();
                             }
                             // 字幕
-                            if(l[i].subtitle.percentComplete != undefined && l[i].subtitle.percentComplete < 100 && l[i].subtitle.percentComplete != '失败') {
+                            if (l[i].subtitle.percentComplete != undefined && l[i].subtitle.percentComplete < 100 && l[i].subtitle.percentComplete != '失败') {
                                 l[i].subtitle.xhr.abort();
                             }
                             // 删除data
@@ -1071,12 +1072,12 @@
                         }
                     }
                 },
-                judgeCompleted: function(id, o){
+                judgeCompleted: function(id, o) {
                     var l = this.data;
-                    for(var i = 0; i <l.length; i++) {
+                    for (var i = 0; i < l.length; i++) {
                         if (l[i].id == id) {
                             // 如果视频和字幕都上传完毕
-                            if((l[i].video.percentComplete >= 100 && l[i].subtitle.percentComplete == undefined) || 
+                            if ((l[i].video.percentComplete >= 100 && l[i].subtitle.percentComplete == undefined) ||
                                 (l[i].video.percentComplete >= 100 && l[i].subtitle.percentComplete >= 100)) {
                                 o.transcode(id, o);
                             }
@@ -1091,7 +1092,7 @@
                     // xhr对象
                     var fileXhr = new XMLHttpRequest();
                     // var video = {"name": videoFile.name, "size":videoFile.size, "percentComplete": 0, "xhr": videoXhr};
-                    
+
                     // 添加data，并获取id
                     var id = this.set(file);
 
@@ -1099,21 +1100,21 @@
                     util.uploadFileToUrl(fileXhr, file, uploadUrl, 'normal',
                         // 上传中
                         function(evt) {
-                          $scope.$apply(function(){
-                            if (evt.lengthComputable) {
-                              var percentComplete = Math.round(evt.loaded * 100 / evt.total);
-                              // 更新上传进度
-                              o.setPercentById('file', id, percentComplete);
-                            }
-                          });
+                            $scope.$apply(function() {
+                                if (evt.lengthComputable) {
+                                    var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+                                    // 更新上传进度
+                                    o.setPercentById('file', id, percentComplete);
+                                }
+                            });
                         },
                         // 上传成功
                         function(xhr) {
                             var ret = JSON.parse(xhr.responseText);
                             console && console.log(ret);
-                            $scope.$apply(function(){
-                              o.setSrcSizeById('file', id, ret.upload_path, ret.size);
-                              o.judgeCompleted(id, o);
+                            $scope.$apply(function() {
+                                o.setSrcSizeById('file', id, ret.upload_path, ret.size);
+                                o.judgeCompleted(id, o);
                             });
                             alert('上传成功');
                         },
@@ -1127,9 +1128,251 @@
                     );
                 }
             }
-           
+
         }
     ])
+
+    // 编辑广告素材
+    .controller('editMaterialController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'CONFIG', 'util',
+        function($http, $scope, $state, $stateParams, $filter, NgTableParams, CONFIG, util) {
+            console.log('editMaterialController')
+            console.log($stateParams)
+            console.log($scope.app.params)
+            var self = this;
+            self.init = function() {
+                self.stateParams = $stateParams;
+                self.form = $scope.app.params;
+                
+                // 初始化上传列表对象
+                self.uploadList = new UploadLists();
+                // 编辑前，先取出擦数中的文件对象
+                self.uploadList.data =[
+                    {file:{
+                        src:self.form.URL,
+                        size:self.form.Size
+                    }}
+                ]
+            }
+
+            self.cancel = function() {
+                $scope.app.maskUrl = '';
+            }
+
+            //=====日历选择器=============================
+            // 弹出体力选择器
+
+
+            self.showDatePicker = function(start) {
+                if (start == 'start') {
+                    self.startDatePicker = true;
+                    self.endDatePicker = false;
+                } else {
+                    self.startDatePicker = false;
+                    self.endDatePicker = true;
+                }
+
+            }
+            self.onTimeSet = function(start) {
+                if (start == 'start') {
+                    self.startDatePicker = false;
+                } else {
+                    self.endDatePicker = false;
+                }
+            }
+
+            //=====日历选择器=============================
+
+
+
+            // 编辑广告素材 提交
+            self.saveForm = function() {
+                if (self.uploadList.data.length == 0) {
+                    alert('请先上传图片');
+                    return;
+                }
+                if (!self.form.LifeStartTime) {
+                    alert("请选择开始时间");
+                    return;
+                }
+                if (!self.form.LifeEndTime) {
+                    alert("请选择结束时间");
+                    return;
+                }
+                self.saving = true;
+                var file = self.uploadList.data[0].file
+                var data = {
+                    "action": "editMaterial",
+                    "token": util.getParams("token"),
+                    "data": {
+                        "ID": self.form.ID - 0,
+                        "URLRelative": "",
+                        "LifeEndTime": $filter('date')(self.form.LifeEndTime, 'yyyy-MM-dd HH:mm:ss'),
+                        "Name": self.form.Name,
+                        "URL": file.src,
+                        "LifeStartTime": $filter('date')(self.form.LifeStartTime, 'yyyy-MM-dd HH:mm:ss'),
+                        "Duration": self.form.Duration,
+                        "Description": self.form.Description,
+                        "Size": file.size
+                    }
+
+                }
+
+
+                data = JSON.stringify(data);
+                $http({
+                    method: $filter('ajaxMethod')(),
+                    url: util.getApiUrl('material', 'shopList', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var msg = response.data;
+                    if (msg.rescode == '200') {
+                        alert('编辑成功');
+                        self.cancel();
+                        $state.reload('app.adsMaterial.materialList');
+                    } else if (msg.rescode == "401") {
+                        alert('访问超时，请重新登录');
+                        $state.go('login');
+                    } else {
+                        alert(msg.rescode + ' ' + msg.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert(response.status + ' 服务器出错');
+                }).finally(function(value) {
+                    self.saving = false;
+                })
+            }
+
+            // 上传广告库资料
+            self.uploadAdsFile = function() {
+                if (!$scope.adsFile) {
+                    alert('请选择图片');
+                    return;
+                }
+                self.uploadList.uploadFile($scope.adsFile, self.uploadList);
+            }
+
+
+            //广告素材 上传
+            function UploadLists() {
+                this.data = [
+                    /*{
+                        "id":0, 
+                        "video":{
+                            "name": "星际迷航", "size": 1111, "percentComplete": 40, "xhr":"xhr", "src":"xx"
+                        },
+                        "subtitle":{
+                            "name": "星际迷航－字幕", "size": 1111, "percentComplete": 40, "xhr":"xhr", "src":"xx"
+                        }
+                    }*/
+                ];
+                this.maxId = 0;
+            }
+
+            UploadLists.prototype = {
+                // 设置未当前选中的广告资料
+                set: function(file) {
+
+                    //先清空数组
+                    this.data = [];
+                    this.data.push({ "file": file, "id": this.maxId });
+                    return this.maxId;
+                },
+                setPercentById: function(type, id, percentComplete) {
+                    for (var i = 0; i < this.data.length; i++) {
+                        if (this.data[i].id == id) {
+                            this.data[i][type].percentComplete = percentComplete;
+                            break;
+                        }
+                    }
+                },
+                setSrcSizeById: function(type, id, src, size) {
+                    for (var i = 0; i < this.data.length; i++) {
+                        if (this.data[i].id == id) {
+                            this.data[i][type].src = src;
+                            this.data[i][type].size = size;
+                            break;
+                        }
+                    }
+                },
+                deleteById: function(id) {
+                    var l = this.data;
+                    for (var i = 0; i < l.length; i++) {
+                        if (l[i].id == id) {
+                            // 如果正在上传，取消上传
+                            // 视频
+                            if (l[i].video.percentComplete < 100 && l[i].video.percentComplete != '失败') {
+                                l[i].video.xhr.abort();
+                            }
+                            // 字幕
+                            if (l[i].subtitle.percentComplete != undefined && l[i].subtitle.percentComplete < 100 && l[i].subtitle.percentComplete != '失败') {
+                                l[i].subtitle.xhr.abort();
+                            }
+                            // 删除data
+                            l.splice(i, 1);
+                            break;
+                        }
+                    }
+                },
+                judgeCompleted: function(id, o) {
+                    var l = this.data;
+                    for (var i = 0; i < l.length; i++) {
+                        if (l[i].id == id) {
+                            // 如果视频和字幕都上传完毕
+                            if ((l[i].video.percentComplete >= 100 && l[i].subtitle.percentComplete == undefined) ||
+                                (l[i].video.percentComplete >= 100 && l[i].subtitle.percentComplete >= 100)) {
+                                o.transcode(id, o);
+                            }
+                            break;
+                        }
+                    }
+                },
+                uploadFile: function(file, o) {
+                    // 上传后台地址
+                    var uploadUrl = CONFIG.uploadUrl;
+
+                    // xhr对象
+                    var fileXhr = new XMLHttpRequest();
+                    // var video = {"name": videoFile.name, "size":videoFile.size, "percentComplete": 0, "xhr": videoXhr};
+
+                    // 添加data，并获取id
+                    var id = this.set(file);
+
+                    // 上传视频
+                    util.uploadFileToUrl(fileXhr, file, uploadUrl, 'normal',
+                        // 上传中
+                        function(evt) {
+                            $scope.$apply(function() {
+                                if (evt.lengthComputable) {
+                                    var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+                                    // 更新上传进度
+                                    o.setPercentById('file', id, percentComplete);
+                                }
+                            });
+                        },
+                        // 上传成功
+                        function(xhr) {
+                            var ret = JSON.parse(xhr.responseText);
+                            console && console.log(ret);
+                            $scope.$apply(function() {
+                                o.setSrcSizeById('file', id, ret.upload_path, ret.size);
+                                o.judgeCompleted(id, o);
+                            });
+                            alert('上传成功');
+                        },
+                        // 上传失败
+                        function(xhr) {
+                            // $scope.$apply(function(){
+                            //   o.setPercentById('video', id, '失败');
+                            // });
+                            // xhr.abort();
+                        }
+                    );
+                }
+            }
+
+        }
+    ])
+
 
 
 
