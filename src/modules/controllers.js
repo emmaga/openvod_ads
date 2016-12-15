@@ -101,65 +101,74 @@
                     self.loading = false;
                 });
             }
+            
+            self.addPositionTag = function(){
+                $scope.app.maskUrl = 'pages/addPositionTag.html';
+            }
+            
+            self.editPositionTag = function(tag){
+                $scope.app.maskUrl = 'pages/editPositionTag.html';
+                $scope.app.params = tag;
+            }
 
         }
     ])
 
-    .controller('adsAddController', ['$http', '$scope', '$state', '$filter', '$stateParams', 'NgTableParams', 'util',
-        function($http, $scope, $state, $filter, $stateParams, NgTableParams, util) {
-            console.log('adsAddController')
-            var self = this;
-            self.init = function() {
+    // .controller('adsAddController', ['$http', '$scope', '$state', '$filter', '$stateParams', 'NgTableParams', 'util',
+    //     function($http, $scope, $state, $filter, $stateParams, NgTableParams, util) {
+    //         console.log('adsAddController')
+    //         var self = this;
+    //         self.init = function() {
 
-            }
+    //         }
 
-            self.edit = function(movieID) {
+    //         self.edit = function(movieID) {
 
-            }
+    //         }
 
-            // 获取 电影的 分类 产地
-            self.getTags = function() {
-                var data = JSON.stringify({
-                    "token": util.getParams('token'),
-                    "action": "getTags"
-                })
+    //         // 获取 电影的 分类 产地
+    //         self.getTags = function() {
+    //             var data = JSON.stringify({
+    //                 "token": util.getParams('token'),
+    //                 "action": "getTags"
+    //             })
 
-                $http({
-                    method: 'POST',
-                    url: util.getApiUrl('movie', '', 'server'),
-                    data: data
-                }).then(function successCallback(response) {
-                    var msg = response.data;
-                    if (msg.rescode == '200') {
-                        if (msg.CategoryList.length == 0) {
-                            self.noCategotyData = true;
-                        } else {
-                            self.categoryList = msg.CategoryList;
-                            console.log(self.categoryList)
-                        }
-                        if (msg.LocationList.length == 0) {
-                            self.noLocationData = true;
-                        } else {
-                            self.locationList = msg.LocationList;
-                            console.log(self.locationList)
-                        }
-                    } else if (msg.rescode == "401") {
-                        alert('访问超时，请重新登录');
-                        $state.go('login');
-                    } else {
-                        alert(msg.rescode + ' ' + msg.errInfo);
-                    }
-                }, function errorCallback(response) {
-                    alert(response.status + ' 服务器出错');
-                }).finally(function(value) {
-                    self.loading = false;
-                });
-            }
+    //             $http({
+    //                 method: 'POST',
+    //                 url: util.getApiUrl('movie', '', 'server'),
+    //                 data: data
+    //             }).then(function successCallback(response) {
+    //                 var msg = response.data;
+    //                 if (msg.rescode == '200') {
+    //                     if (msg.CategoryList.length == 0) {
+    //                         self.noCategotyData = true;
+    //                     } else {
+    //                         self.categoryList = msg.CategoryList;
+    //                         console.log(self.categoryList)
+    //                     }
+    //                     if (msg.LocationList.length == 0) {
+    //                         self.noLocationData = true;
+    //                     } else {
+    //                         self.locationList = msg.LocationList;
+    //                         console.log(self.locationList)
+    //                     }
+    //                 } else if (msg.rescode == "401") {
+    //                     alert('访问超时，请重新登录');
+    //                     $state.go('login');
+    //                 } else {
+    //                     alert(msg.rescode + ' ' + msg.errInfo);
+    //                 }
+    //             }, function errorCallback(response) {
+    //                 alert(response.status + ' 服务器出错');
+    //             }).finally(function(value) {
+    //                 self.loading = false;
+    //             });
+    //         }
 
 
 
-        }
-    ])
+    //     }
+    // ])
 
     .controller('adsPositionController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'util',
         function($http, $scope, $state, $stateParams, $filter, NgTableParams, util) {
@@ -214,6 +223,8 @@
                 $scope.app.maskUrl = 'pages/addPosition.html';
             }
 
+
+
             self.editPosition = function(position){
                 $scope.app.maskUrl = 'pages/editPosition.html';
                 $scope.app.params = {position:position}
@@ -221,6 +232,124 @@
 
         }
     ])
+
+    // 添加广告位标签
+    .controller('addPositionTagController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'CONFIG', 'util',
+        function($http, $scope, $state, $stateParams, $filter, NgTableParams, CONFIG, util) {
+            console.log('addPositionTagController')
+            console.log($stateParams)
+            var self = this;
+            self.init = function() {
+                
+                // 表单需要提交的东西
+                self.form = {};
+              
+
+            }
+
+            self.cancel = function() {
+                $scope.app.maskUrl = '';
+            }
+
+            // 添加广告位标签
+            self.addPositionTag = function() {
+
+                self.saving = true;
+                var data = {
+                    "action": "addAdvPositionTag",
+                    "token": util.getParams("token"),
+                    "data": {
+                        "TagName": self.form.TagName,
+                        "Description": self.form.Description
+                    }
+                };
+                data = JSON.stringify(data);
+                $http({
+                    method: $filter('ajaxMethod')(),
+                    url: util.getApiUrl('position', 'shopList', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var msg = response.data;
+                    if (msg.rescode == '200') {
+                        alert("广告位标签添加成功");
+                        // $state.reload('app.adsBoard');
+                        // 代替reload
+                        $state.go($state.current, {}, {reload: true});
+                        self.cancel();
+                    } else if (msg.rescode == "401") {
+                        alert('访问超时，请重新登录');
+                        $state.go('login');
+                    } else {
+                        alert(msg.rescode + ' ' + msg.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert(response.status + ' 服务器出错');
+                }).finally(function(value) {
+                    self.saving = false;
+                })
+            }
+
+        }
+    ])
+
+    // 编辑广告位标签
+    .controller('editPositionTagController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'CONFIG', 'util',
+        function($http, $scope, $state, $stateParams, $filter, NgTableParams, CONFIG, util) {
+            console.log('editPositionTagController')
+            console.log($stateParams)
+            console.log($scope.app.params)
+            var self = this;
+            self.init = function() {
+                self.params = $scope.app.params;
+                self.form = self.params;
+            }
+
+            self.cancel = function() {
+                $scope.app.maskUrl = '';
+            }
+
+            // 编辑广告位标签
+            self.editPositionTag = function() {
+                self.saving = true;
+                var data = {
+                    "action": "editAdvPositionTag",
+                    "token": util.getParams("token"),
+                    "data": {
+                        "TagName": self.form.TagName,
+                        "Description": self.form.Description,
+                        "ID": self.form.ID
+                    }
+                };
+                data = JSON.stringify(data);
+                $http({
+                    method: $filter('ajaxMethod')(),
+                    url: util.getApiUrl('position', 'shopList', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var msg = response.data;
+                    if (msg.rescode == '200') {
+                        alert("广告位标签修改成功");
+                        // $state.reload('app.adsBoard');
+                        // 代替reload
+                        $state.go($state.current, {}, { reload: true });
+                        self.cancel();
+                    } else if (msg.rescode == "401") {
+                        alert('访问超时，请重新登录');
+                        $state.go('login');
+                    } else {
+                        alert(msg.rescode + ' ' + msg.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert(response.status + ' 服务器出错');
+                }).finally(function(value) {
+                    self.saving = false;
+                })
+            }
+
+        }
+    ])
+
+
     
     // 添加广告位
     .controller('addPositionController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'CONFIG', 'util',

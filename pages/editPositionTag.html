@@ -1,0 +1,11 @@
+<div ng-controller="editPositionTagController as ePT" style="position: absolute; top: 0; z-index: 1000; overflow: auto; height: 100%;width: 100%; background-color: rgba(0,0,0,.6);" ng-init="ePT.init()">
+    addPositionController 编辑广告位标签
+    <br>
+    <br>
+    <button ng-click="ePT.cancel()">关闭</button>
+    <form novalidate ng-submit="addForm.$valid && ePT.editPositionTag()" name="addForm">
+        标签名字：<input type="text" name="" ng-model="ePT.form.TagName" required><br>
+        标签描述：<input type="text" name="" ng-model="ePT.form.Description" required><br>
+        <input type="submit" name="" ng-disabled="addForm.$invalid || ePT.saving" class="btn btn-primary">
+    </form>
+</div>
