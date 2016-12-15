@@ -1,0 +1,11 @@
+<div ng-controller="editAdvTagController as eAT" style="position: absolute; top: 0; z-index: 1000; overflow: auto; height: 100%;width: 100%; background-color: rgba(0,0,0,.6);" ng-init="eAT.init()">
+    addPositionController 编辑广告位标签
+    <br>
+    <br>
+    <button ng-click="eAT.cancel()">关闭</button>
+    <form novalidate ng-submit="addForm.$valid && eAT.editAdvTag()" name="addForm">
+        标签名字：<input type="text" name="" ng-model="eAT.form.TagName" required><br>
+        标签描述：<input type="text" name="" ng-model="eAT.form.Description" required><br>
+        <input type="submit" name="" ng-disabled="addForm.$invalid || eAT.saving" class="btn btn-primary">
+    </form>
+</div>

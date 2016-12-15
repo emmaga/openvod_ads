@@ -1,0 +1,11 @@
+<div ng-controller="addAdvTagController as aAT" style="position: absolute; top: 0; z-index: 1000; overflow: auto; height: 100%;width: 100%; background-color: rgba(0,0,0,.6);" ng-init="aAT.init()">
+    addAdvTagController 添加广告素材标签
+    <br>
+    <br>
+    <button ng-click="aAT.cancel()">关闭</button>
+    <form novalidate ng-submit="addForm.$valid && aAT.addAdvTag()" name="addForm">
+        标签名字：<input type="text" name="" ng-model="aAT.form.TagName" required><br>
+        标签描述：<input type="text" name="" ng-model="aAT.form.Description" required><br>
+        <input type="submit" name="" ng-disabled="addForm.$invalid || aAT.saving" class="btn btn-primary">
+    </form>
+</div>

@@ -938,6 +938,131 @@
                     self.loading = false;
                 });
             }
+
+            self.addAdvTag = function(){
+                $scope.app.maskUrl = 'pages/addAdvTag.html';
+            }
+
+            self.editAdvTag = function(advTag){
+                $scope.app.maskUrl = 'pages/editAdvTag.html';
+                $scope.app.params = advTag;
+            }
+        }
+    ])
+
+    // 添加广告素材标签
+    .controller('addAdvTagController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'CONFIG', 'util',
+        function($http, $scope, $state, $stateParams, $filter, NgTableParams, CONFIG, util) {
+            console.log('addAdvTagController')
+            console.log($stateParams)
+            var self = this;
+            self.init = function() {
+                
+                // 表单需要提交的东西
+                self.form = {};
+            }
+
+            self.cancel = function() {
+                $scope.app.maskUrl = '';
+            }
+
+            // 添加广告素材标签
+            self.addAdvTag = function() {
+
+                self.saving = true;
+                var data = {
+                    "action": "addAdvTag",
+                    "token": util.getParams("token"),
+                    "data": {
+                        "TagName": self.form.TagName,
+                        "Description": self.form.Description
+                    }
+                };
+                data = JSON.stringify(data);
+                $http({
+                    method: $filter('ajaxMethod')(),
+                    url: util.getApiUrl('material', 'shopList', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var msg = response.data;
+                    if (msg.rescode == '200') {
+                        alert("广告标签添加成功");
+                        // $state.reload('app.adsBoard');
+                        // 代替reload
+                        $state.go($state.current, {}, {reload: true});
+                        self.cancel();
+                    } else if (msg.rescode == "401") {
+                        alert('访问超时，请重新登录');
+                        $state.go('login');
+                    } else {
+                        alert(msg.rescode + ' ' + msg.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert(response.status + ' 服务器出错');
+                }).finally(function(value) {
+                    self.saving = false;
+                })
+            }
+
+        }
+    ])
+
+    // 编辑广告素材标签
+    .controller('editAdvTagController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'CONFIG', 'util',
+        function($http, $scope, $state, $stateParams, $filter, NgTableParams, CONFIG, util) {
+            console.log('editAdvTagController')
+            console.log($stateParams)
+            console.log($scope.app.params)
+            var self = this;
+            self.init = function() {
+                self.params = $scope.app.params 
+                // 表单需要提交的东西
+                self.form = self.params;
+            }
+
+            self.cancel = function() {
+                $scope.app.maskUrl = '';
+            }
+
+            // 添加广告素材标签
+            self.editAdvTag = function() {
+
+                self.saving = true;
+                var data = {
+                    "action": "editAdvTag",
+                    "token": util.getParams("token"),
+                    "data": {
+                        "TagName": self.form.TagName,
+                        "Description": self.form.Description,
+                        "ID": self.form.ID
+                    }
+                };
+                data = JSON.stringify(data);
+                $http({
+                    method: $filter('ajaxMethod')(),
+                    url: util.getApiUrl('material', 'shopList', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var msg = response.data;
+                    if (msg.rescode == '200') {
+                        alert("广告标签编辑成功");
+                        // $state.reload('app.adsBoard');
+                        // 代替reload
+                        $state.go($state.current, {}, {reload: true});
+                        self.cancel();
+                    } else if (msg.rescode == "401") {
+                        alert('访问超时，请重新登录');
+                        $state.go('login');
+                    } else {
+                        alert(msg.rescode + ' ' + msg.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert(response.status + ' 服务器出错');
+                }).finally(function(value) {
+                    self.saving = false;
+                })
+            }
+
         }
     ])
 
