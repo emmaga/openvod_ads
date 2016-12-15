@@ -214,9 +214,15 @@
                 $scope.app.maskUrl = 'pages/addPosition.html';
             }
 
+            self.editPosition = function(position){
+                $scope.app.maskUrl = 'pages/editPosition.html';
+                $scope.app.params = {position:position}
+            }
+
         }
     ])
-
+    
+    // 添加广告位
     .controller('addPositionController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'CONFIG', 'util',
         function($http, $scope, $state, $stateParams, $filter, NgTableParams, CONFIG, util) {
             console.log('addPositionController')
@@ -287,40 +293,40 @@
 
             // 获取广告位模版列表
             self.getAdvPositionTemplateList = function() {
-                    self.loading = true;
-                    var data = {
-                        "action": "getAdvPositionTemplateList",
-                        "token": util.getParams("token"),
-                        "data": {}
-                    };
-                    data = JSON.stringify(data);
-                    $http({
-                        method: $filter('ajaxMethod')(),
-                        url: util.getApiUrl('position', 'shopList', 'server'),
-                        data: data
-                    }).then(function successCallback(response) {
-                        var msg = response.data;
-                        if (msg.rescode == '200') {
-                            if (msg.data == 0) {
-                                self.noData = true;
-                                return;
-                            }
-                            self.templateList = msg.data;
-                        } else if (msg.rescode == "401") {
-                            alert('访问超时，请重新登录');
-                            $state.go('login');
-                        } else {
-                            alert(msg.rescode + ' ' + msg.errInfo);
+                self.loading = true;
+                var data = {
+                    "action": "getAdvPositionTemplateList",
+                    "token": util.getParams("token"),
+                    "data": {}
+                };
+                data = JSON.stringify(data);
+                $http({
+                    method: $filter('ajaxMethod')(),
+                    url: util.getApiUrl('position', 'shopList', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var msg = response.data;
+                    if (msg.rescode == '200') {
+                        if (msg.data == 0) {
+                            self.noData = true;
+                            return;
                         }
-                    }, function errorCallback(response) {
-                        alert(response.status + ' 服务器出错');
-                    }).finally(function(value) {
-                        self.loading = false;
-                    })
-                }
+                        self.templateList = msg.data;
+                    } else if (msg.rescode == "401") {
+                        alert('访问超时，请重新登录');
+                        $state.go('login');
+                    } else {
+                        alert(msg.rescode + ' ' + msg.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert(response.status + ' 服务器出错');
+                }).finally(function(value) {
+                    self.loading = false;
+                })
+            }
 
-                //=====日历选择器=============================
-                // 弹出体力选择器
+            //=====日历选择器=============================
+            // 弹出体力选择器
 
 
             self.showDatePicker = function(start) {
@@ -334,14 +340,14 @@
 
             }
             self.onTimeSet = function(start) {
-                    if (start == 'start') {
-                        self.startDatePicker = false;
-                    } else {
-                        self.endDatePicker = false;
-                    }
+                if (start == 'start') {
+                    self.startDatePicker = false;
+                } else {
+                    self.endDatePicker = false;
                 }
+            }
 
-             //=====日历选择器=============================
+            //=====日历选择器=============================
 
 
 
@@ -351,6 +357,147 @@
 
         }
     ])
+
+    // 编辑广告位
+    .controller('editPositionController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'CONFIG', 'util',
+        function($http, $scope, $state, $stateParams, $filter, NgTableParams, CONFIG, util) {
+            console.log('editPositionController')
+            console.log($stateParams)
+            console.log($scope.app.params)
+            var self = this;
+            self.init = function() {
+                self.stateParams = $stateParams;
+                self.params = $scope.app.params;
+                // 参数传递
+                self.form = self.params.position;
+                // 日期选择器 初始化 隐藏
+                self.startDatePicker = false;
+                self.endDatePicker = false;
+                
+                self.getAdvPositionTemplateList();
+
+            }
+
+            self.cancel = function() {
+                $scope.app.maskUrl = '';
+            }
+
+            // 编辑广告位
+            self.editAdvPosition = function() {
+                if (!self.form.LifeStartTime) {
+                    alert("请选择开始时间");
+                    return;
+                }
+                if (!self.form.LifeEndTime) {
+                    alert("请选择结束时间");
+                    return;
+                }
+                self.saving = true;
+                var data = {
+                    "action": "editAdvPosition",
+                    "token": util.getParams("token"),
+                    "data": {
+                        "LifeEndTime": $filter('date')(self.form.LifeEndTime, 'yyyy-MM-dd HH:mm:ss'),
+                        "LifeStartTime": $filter('date')(self.form.LifeStartTime, 'yyyy-MM-dd HH:mm:ss'),
+                        "Description": self.form.Description,
+                        "ScheduleTypeParam": self.form.ScheduleTypeParam,
+                        "ScheduleType": self.form.ScheduleType,
+                        "Name": self.form.Name,
+                        "AdvPositionTemplateName": self.form.AdvPositionTemplate.AdvPositionTemplateName,
+                        "ID":self.form.ID
+                    }
+                };
+                data = JSON.stringify(data);
+                $http({
+                    method: $filter('ajaxMethod')(),
+                    url: util.getApiUrl('position', 'shopList', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var msg = response.data;
+                    if (msg.rescode == '200') {
+                        alert("广告位编辑成功");
+                        $state.reload('app.adsBoard.adsPosition',{adsPosition:self.stateParams.adsPosition})
+                        self.cancel();
+                    } else if (msg.rescode == "401") {
+                        alert('访问超时，请重新登录');
+                        $state.go('login');
+                    } else {
+                        alert(msg.rescode + ' ' + msg.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert(response.status + ' 服务器出错');
+                }).finally(function(value) {
+                    self.saving = false;
+                })
+            }
+
+            // 获取广告位模版列表
+            self.getAdvPositionTemplateList = function() {
+                self.loading = true;
+                var data = {
+                    "action": "getAdvPositionTemplateList",
+                    "token": util.getParams("token"),
+                    "data": {}
+                };
+                data = JSON.stringify(data);
+                $http({
+                    method: $filter('ajaxMethod')(),
+                    url: util.getApiUrl('position', 'shopList', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var msg = response.data;
+                    if (msg.rescode == '200') {
+                        if (msg.data == 0) {
+                            self.noData = true;
+                            return;
+                        }
+                        self.form.templateList = msg.data;
+                    } else if (msg.rescode == "401") {
+                        alert('访问超时，请重新登录');
+                        $state.go('login');
+                    } else {
+                        alert(msg.rescode + ' ' + msg.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert(response.status + ' 服务器出错');
+                }).finally(function(value) {
+                    self.loading = false;
+                })
+            }
+
+            //=====日历选择器=============================
+            // 弹出体力选择器
+
+
+            self.showDatePicker = function(start) {
+                if (start == 'start') {
+                    self.startDatePicker = true;
+                    self.endDatePicker = false;
+                } else {
+                    self.startDatePicker = false;
+                    self.endDatePicker = true;
+                }
+
+            }
+            self.onTimeSet = function(start) {
+                if (start == 'start') {
+                    self.startDatePicker = false;
+                } else {
+                    self.endDatePicker = false;
+                }
+            }
+
+            //=====日历选择器=============================
+
+
+
+
+
+
+
+        }
+    ])
+
 
     .controller('adsListController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'util',
         function($http, $scope, $state, $stateParams, $filter, NgTableParams, util) {
@@ -677,6 +824,10 @@
 
             self.addMaterial = function(){
                 $scope.app.maskUrl = 'pages/addMaterial.html';
+            }
+
+            self.editMaterial = function(){
+                $scope.app.maskUrl = 'pages/editMaterial.html';
             }
 
             self.dateOptions = {

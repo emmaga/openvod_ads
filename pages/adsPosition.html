@@ -6,7 +6,7 @@
 
 
     <div ng-repeat="position in adsPosition.advPositionList track by $index" ui-sref="app.adsBoard.adsPosition.adsList({PostionID:position.ID})">
-    	{{position.Name}}--{{position.Description}}--{{position.AdvPositionTemplateName}}
+    	广告位名字：{{position.Name}}--广告位描述：{{position.Description}}--广告位模版名字：{{position.AdvPositionTemplateName}}  -- <button ng-click="adsPosition.editPosition(position)">编辑</button>
     </div>
     <div ng-show="adsPosition.loading">loading...</div>
     <div ng-show="adsPosition.noData">查无数据</div>

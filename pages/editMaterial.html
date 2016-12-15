@@ -1,0 +1,26 @@
+<div ng-controller="editMaterialController as editMaterial" style="position: absolute; top: 0; z-index: 1000; overflow: auto; height: 100%;background-color: rgba(0,0,0,.7);width: 100%;" ng-init="editMaterial.init()">
+    editMaterialController 添加广告素材
+    <br>
+    <button ng-click="editMaterial.cancel()">关闭</button>
+    <form novalidate ng-submit="addForm.$valid && editMaterial.saveForm()" name="addForm">
+        <div class="row">
+            <div ng-controller="lifeStartTimeController as lst" class="col-md-6">
+                广告开始日期:<i class="glyphicon glyphicon-calendar" ng-click="editMaterial.showDatePicker('start')"></i> {{ editMaterial.form.LifeStartTime | date:'yyyy-MM-dd hh:mm:ss' }}
+                <datetimepicker data-ng-model="editMaterial.form.LifeStartTime" data-datetimepicker-config="{ startView:'day', minView:'minute' }" ng-show="editMaterial.startDatePicker" data-on-set-time="editMaterial.onTimeSet('start')" />
+            </div>
+            <div ng-controller="lifeEndTimeController as let" class="col-md-6">
+                广告结束日期:<i class="glyphicon glyphicon-calendar" ng-click="editMaterial.showDatePicker()"></i> {{ editMaterial.form.LifeEndTime | date:'yyyy-MM-dd hh:mm:ss' }}
+                <datetimepicker data-ng-model="editMaterial.form.LifeEndTime" data-datetimepicker-config="{ startView:'day', minView:'minute' }" ng-show="editMaterial.endDatePicker" data-on-set-time="editMaterial.onTimeSet()" />
+            </div>
+        </div>
+        <input type="file" name="" file-Model="adsFile" data-e="none">
+         <button class="btn btn-primary" ng-click="editMaterial.uploadAdsFile()">上传</button><br> 上传进度：
+        <span ng-repeat="upload in editMaterial.uploadList.data track by $index">{{upload['file'].percentComplete}}</span>
+        <br>
+        名称：<input type="text" name="" required ng-model="editMaterial.form.Name"><br>
+        时长：<input type="number" name="" required ng-model="editMaterial.form.Duration"><br>
+        描述：<input type="text" name="" required ng-model="editMaterial.form.Description"><br>
+       
+        <input type="submit" name="" ng-disabled="addForm.$invalid || editMaterial.saving" class="btn btn-primary">
+    </form>
+</div>
