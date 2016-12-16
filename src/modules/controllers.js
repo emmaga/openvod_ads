@@ -170,6 +170,7 @@
     //     }
     // ])
 
+    // 广告位列表
     .controller('adsPositionController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'util',
         function($http, $scope, $state, $stateParams, $filter, NgTableParams, util) {
             console.log('adsPositionController')
@@ -1007,6 +1008,119 @@
         }
     ])
 
+    // 广告 添加/编辑 广告标签(全添加)
+    .controller('addAdvTagMatrixController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'CONFIG', 'util',
+        function($http, $scope, $state, $stateParams, $filter, NgTableParams, CONFIG, util) {
+            console.log('addAdvTagController')
+            console.log($stateParams)
+            console.log($scope.app.params)
+            var self = this;
+            self.init = function() {
+                self.stateParams = $stateParams;
+                self.params = $scope.app.params;
+                // 表单需要提交的东西
+                self.form = {};
+                self.getAdvTagList();
+            }
+
+            self.cancel = function() {
+                $scope.app.maskUrl = '';
+            }
+
+            // 广告 添加/编辑 广告标签
+            self.addAdvTagMatrix = function() {
+                var TagID = self.getArray(self.advTagList, 'ID')
+                self.saving = true;
+                var data = {
+                    "action": "addAdvTagMatrix",
+                    "token": util.getParams("token"),
+                    "data": {
+                        "AdvID": self.params.ID - 0,
+                        "TagID": TagID
+                    }
+                };
+                data = JSON.stringify(data);
+                $http({
+                    method: $filter('ajaxMethod')(),
+                    url: util.getApiUrl('material', 'shopList', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var msg = response.data;
+                    if (msg.rescode == '200') {
+                        alert("标签编辑成功");
+                        // $state.reload('app.adsBoard');
+                        // 代替reload
+                        $state.go($state.current, {}, { reload: true });
+                        self.cancel();
+                    } else if (msg.rescode == "401") {
+                        alert('访问超时，请重新登录');
+                        $state.go('login');
+                    } else {
+                        alert(msg.rescode + ' ' + msg.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert(response.status + ' 服务器出错');
+                }).finally(function(value) {
+                    self.saving = false;
+                })
+            }
+
+
+            // 获取广告素材标签列表
+            self.getAdvTagList = function() {
+                self.loading = true;
+                var data = JSON.stringify({
+                    "token": util.getParams('token'),
+                    "action": "getAdvTagList"
+                })
+                $http({
+                    method: 'POST',
+                    url: util.getApiUrl('material', '', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var msg = response.data;
+                    if (msg.rescode == '200') {
+                        if (msg.data.length == 0) {
+                            self.noData = true;
+                            return;
+                        }
+                        self.advTagList = msg.data;
+                        // 
+                        for (var i = 0; i < self.advTagList.length; i++) {
+                            for (var j = 0; j < self.params.AdvTags.length; j++) {
+                                if (self.params.AdvTags[j].TagID == self.advTagList[i]['ID']) {
+                                    self.advTagList[i]['checked'] = true;
+                                    break;
+                                }
+                            }
+                        }
+                    } else if (msg.rescode == "401") {
+                        alert('访问超时，请重新登录');
+                        $state.go('login');
+                    } else {
+                        alert(msg.rescode + ' ' + msg.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert(response.status + ' 服务器出错');
+                }).finally(function(value) {
+                    self.loading = false;
+                });
+            }
+
+            // 提取出数组
+            self.getArray = function(arr, key) {
+                var flag = [];
+                for (var i = 0; i < arr.length; i++) {
+                    if(arr[i].checked == true){
+                        flag.push(arr[i][key])
+                    }
+                }
+                return flag;
+            }
+
+        }
+    ])
+
     // 编辑广告素材标签
     .controller('editAdvTagController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'CONFIG', 'util',
         function($http, $scope, $state, $stateParams, $filter, NgTableParams, CONFIG, util) {
@@ -1065,7 +1179,8 @@
 
         }
     ])
-
+    
+    // 广告素材列表
     .controller('materialListController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'util',
         function($http, $scope, $state, $stateParams, $filter, NgTableParams, util) {
             console.log('materialListController')
@@ -1082,6 +1197,11 @@
 
             self.editMaterial = function(material){
                 $scope.app.maskUrl = 'pages/editMaterial.html';
+                $scope.app.params = material;
+            }
+
+            self.addAdvTagMatrix = function(material){
+                $scope.app.maskUrl = 'pages/addAdvTagMatrix.html';
                 $scope.app.params = material;
             }
 
