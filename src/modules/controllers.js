@@ -2,7 +2,8 @@
 
 (function() {
     var app = angular.module('app.controllers', [])
-
+    
+    //登陆
     .controller('loginController', ['$scope', '$http', '$state', '$filter', 'md5', 'util',
         function($scope, $http, $state, $filter, md5, util) {
             console.log('loginController')
@@ -45,16 +46,18 @@
         }
     ])
 
-
+    // 控制面板
     .controller('appController', ['$http', '$scope', '$state', '$stateParams', 'util', 'CONFIG',
         function($http, $scope, $state, $stateParams, util, CONFIG) {
             console.log('appController')
             var self = this;
             self.init = function() {
-
+                self.goToState();
             }
 
             self.goToState = function(stateName) {
+                //默认加载路由
+                stateName = stateName || 'app.adsBoard';
                 $state.go(stateName)
             }
 
@@ -64,7 +67,7 @@
             }
         }
     ])
-
+    // 广告位标签列表
     .controller('adsBoardController', ['$http', '$scope', '$state', '$stateParams', 'util',
         function($http, $scope, $state, $stateParams, util) {
             console.log('adsBoardController')
@@ -72,7 +75,10 @@
             var self = this;
             self.init = function() {
                 self.getPositionTags();
+                //默认加载全部
+                $state.go('app.adsBoard.adsPosition',{adsPosition:'all'})
             }
+
 
             //  获取广告标签列表
             self.getPositionTags = function() {
@@ -1020,7 +1026,7 @@
             var self = this;
             self.init = function() {
                 self.getAdvTagList();
-                
+                $state.go('app.adsMaterial.materialList',{advTag:'all'})
             }
             // 获取广告素材标签列表
             self.getAdvTagList = function() {
