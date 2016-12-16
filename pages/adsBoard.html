@@ -6,7 +6,7 @@
         全部
     </a><br>
     <div ng-repeat="tag in adsBoard.positionTags track by $index" ui-sref="app.adsBoard.adsPosition({adsPosition:tag.ID})">
-        {{tag.TagName}} --<button ng-click="adsBoard.editPositionTag(tag)">编辑</button>
+        {{tag.TagName}} --<button ng-click="adsBoard.editPositionTag(tag)" class="btn btn-primary">编辑</button> 
     </div>
     <a class="btn btn-primary" ng-click="adsBoard.addPositionTag()">添加标签</a>
     <div ng-show="adsBoard.noData">查无数据</div>

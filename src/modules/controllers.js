@@ -231,6 +231,120 @@
                 $scope.app.params = {position:position}
             }
 
+            self.addAdvPositionTagMatrix = function(position){
+                $scope.app.maskUrl = 'pages/addAdvPositionTagMatrix.html';
+                $scope.app.params = {position:position}
+            }
+
+        }
+    ])
+
+    // 广告位 添加/编辑 广告位标签(全添加)
+    .controller('addAdvPositionTagMatrixController', ['$http', '$scope', '$state', '$stateParams', '$filter', 'NgTableParams', 'CONFIG', 'util',
+        function($http, $scope, $state, $stateParams, $filter, NgTableParams, CONFIG, util) {
+            console.log('addAdvPositionTagMatrixController')
+            console.log($stateParams)
+            console.log($scope.app.params)
+            var self = this;
+            self.init = function() {
+                self.stateParams = $stateParams;
+                self.params = $scope.app.params;
+                // 表单需要提交的东西
+                self.form = {};
+                self.getAdvPositionTagList();
+            }
+
+            self.cancel = function() {
+                $scope.app.maskUrl = '';
+            }
+
+            // 广告位 添加/编辑 广告位标签
+            self.addAdvPositionTagMatrix = function() {
+                var TagID = self.getArray(self.advPositionTagList, 'ID')
+                self.saving = true;
+                var data = {
+                    "action": "addAdvPositionTagMatrix",
+                    "token": util.getParams("token"),
+                    "data": {
+                        "PositionID": self.params.position.ID - 0,
+                        "TagID": TagID
+                    }
+                };
+                data = JSON.stringify(data);
+                $http({
+                    method: $filter('ajaxMethod')(),
+                    url: util.getApiUrl('position', 'shopList', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var msg = response.data;
+                    if (msg.rescode == '200') {
+                        alert("标签编辑成功");
+                        // $state.reload('app.adsBoard');
+                        // 代替reload
+                        $state.go($state.current, {}, { reload: true });
+                        self.cancel();
+                    } else if (msg.rescode == "401") {
+                        alert('访问超时，请重新登录');
+                        $state.go('login');
+                    } else {
+                        alert(msg.rescode + ' ' + msg.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert(response.status + ' 服务器出错');
+                }).finally(function(value) {
+                    self.saving = false;
+                })
+            }
+
+
+            // 获取广告位标签列表
+            self.getAdvPositionTagList = function() {
+                self.loading = true;
+                $http({
+                    method: 'POST',
+                    url: util.getApiUrl('positiontag', '', 'server')
+                }).then(function successCallback(response) {
+                    var msg = response.data;
+                    if (msg.rescode == '200') {
+                        if (msg.data.length == 0) {
+                            self.noData = true;
+                            return;
+                        }
+                        self.advPositionTagList = msg.data;
+                        // 
+                        for (var i = 0; i < self.advPositionTagList.length; i++) {
+                            for (var j = 0; j < self.params.position.AdvPositionTags.length; j++) {
+                                if (self.params.position.AdvPositionTags[j].TagID == self.advPositionTagList[i]['ID']) {
+                                    self.advPositionTagList[i]['checked'] = true;
+                                    break;
+                                }
+                            }
+                        }
+                        console.log(self.advPositionTagList)
+                    } else if (msg.rescode == "401") {
+                        alert('访问超时，请重新登录');
+                        $state.go('login');
+                    } else {
+                        alert(msg.rescode + ' ' + msg.errInfo);
+                    }
+                }, function errorCallback(response) {
+                    alert(response.status + ' 服务器出错');
+                }).finally(function(value) {
+                    self.loading = false;
+                });
+            }
+
+            // 提取出数组
+            self.getArray = function(arr, key) {
+                var flag = [];
+                for (var i = 0; i < arr.length; i++) {
+                    if(arr[i].checked == true){
+                        flag.push(arr[i][key])
+                    }
+                }
+                return flag;
+            }
+
         }
     ])
 

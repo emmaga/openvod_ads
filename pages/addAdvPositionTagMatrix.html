@@ -1,0 +1,12 @@
+<div ng-controller="addAdvPositionTagMatrixController as aAPTM" style="position: absolute; top: 0; z-index: 1000; overflow: auto; height: 100%;width: 100%; background-color: rgba(0,0,0,.6);" ng-init="aAPTM.init()">
+    addAdvPositionTagMatrixController 广告位 添加/编辑 广告位标签(全添加)
+    <br>
+    <br>
+    <button ng-click="aAPTM.cancel()">关闭</button>
+    <form novalidate ng-submit="addForm.$valid && aAPTM.addAdvPositionTagMatrix()" name="addForm">
+        <div ng-repeat="tag in aAPTM.advPositionTagList track by $index">
+        	<input type="checkbox" name="" ng-model="aAPTM.advPositionTagList[$index].checked" ng-checked="aAPTM.advPositionTagList[$index].checked">{{tag.TagName}}
+        </div>
+         <input type="submit" name="" ng-disabled="aAPTM.saving">
+    </form>
+</div>
