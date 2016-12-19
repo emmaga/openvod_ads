@@ -52,6 +52,20 @@
             })
     }])
 
+    // 每次页面开始跳转时触发
+    .run(['$rootScope', '$state', 'util', function ($rootScope, $state, util) {
+        $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams, options) {
+            // 判断用户是否登录
+            if (!util.getParams('token') && toState.name != "login") {
+                $state.go('login');
+                // 告诉子作用域无需处理这个事件
+                event.preventDefault();
+                alert('访问超时，请重新登录');
+                
+            }
+        })
+    }])
+
 
     .constant('CONFIG', {
         serverUrl: 'http://openvod.cleartv.cn/backend_adv/v1/',
