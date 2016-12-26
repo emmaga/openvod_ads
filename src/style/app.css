@@ -1,7 +1,12 @@
 .fixed-width-5 {
   width:320px;
 }
-
+.break-space-double {
+    opacity: 0;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    color:white;
+}
 
 /*form表格验证*/
 .ng-valid.ng-dirty {
