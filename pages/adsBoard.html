@@ -1,10 +1,8 @@
 <div ng-controller="adsBoardController as adsBoard" ng-init="adsBoard.init()" class="col-sm-9 page col-right">
-    广告投放<br>
-    广告标签列表<br>
     <div ng-show="adsBoard.loading">loading....</div>
-    <a  ui-sref="app.adsBoard.adsPosition({adsPosition:'all'})">
+    <div  ui-sref="app.adsBoard.adsPosition({adsPosition:'all'})">
         全部
-    </a><br>
+    </div><br>
     <div ng-repeat="tag in adsBoard.positionTags track by $index" ui-sref="app.adsBoard.adsPosition({adsPosition:tag.ID})">
         {{tag.TagName}} --<button ng-click="adsBoard.editPositionTag(tag)" class="btn btn-primary">编辑</button> 
     </div>

@@ -1,15 +1,26 @@
-<div ng-controller="adsMaterialController as adsMaterial" ng-init="adsMaterial.init()" class="col-sm-9 page col-right">
-    广告素材<br>
-    <hr>
-        
-        <div ng-show="adsMaterial.loading">loading....</div><br>
-        <a  ui-sref="app.adsMaterial.materialList({advTag:'all'})">
-            全部
-        </a><br>
-        <div ng-repeat="advTag in adsMaterial.advTagList track by $index" ui-sref="app.adsMaterial.materialList({advTag:advTag.ID})">
-            {{advTag.TagName}}  --<button ng-click="adsMaterial.editAdvTag(advTag)">编辑</button><br>
-        </div>
-        <a class="btn btn-primary" ng-click="adsMaterial.addAdvTag()">添加标签</a>
-        <ui-view></ui-view>
-        <div ng-show="adsMaterial.noData">查无数据</div>
+<div ng-controller="adsMaterialController as adsMaterial" ng-init="adsMaterial.init()" class="col-sm-9 page ">
+    <strong>广告投放</strong>
+    <hr class="break-space-double">
+    <a class="btn btn-default" ng-click="adsMaterial.addAdvTag()"><i class="glyphicon glyphicon-plus"></i>添加标签</a>
+    <div ng-show="adsMaterial.loading">loading....</div>
+    <ul class="adsMaterial nav">
+        <li>
+            <div ui-sref="app.adsMaterial.materialList({advTag:'all'})">
+                全部
+            </div>
+        </li>
+        <li ng-repeat="advTag in adsMaterial.advTagList track by $index">
+            <div ui-sref="app.adsMaterial.materialList({advTag:advTag.ID})">
+                {{advTag.TagName}}
+                <br>
+                <button ng-click="adsMaterial.editAdvTag(advTag)">编辑</button>
+            </div>
+        </li>
+    </ul>
+    <hr class="break-space-double">
+    <hr class="break-space-double">
+    <hr class="break-space-double">
+    <hr class="break-space-double">
+    <ui-view></ui-view>
+    <div ng-show="adsMaterial.noData">查无数据</div>
 </div>
