@@ -1,10 +1,19 @@
-<div   ng-controller="adsListController as adsList" ng-init="adsList.init()">
-    adsList广告位对应的广告列表<br/>
-        <button ng-click="adsList.positionAddAdv();">添加</button>
-        <div ng-show="adsList.loading">Loading...</div>
-        <div ng-repeat="ad in adsList.adsList track by $index">
-            ID: {{ad.AdvID}}
-        </div>
-        <div ng-show="adsList.noData">查无数据</div>
-
+<div ng-controller="adsListController as adsList" ng-init="adsList.init()">
+    <strong>广告列表</strong>
+    <hr class="break-space-double">
+    <button ng-click="adsList.positionAddAdv();" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>添加广告</button>
+    <div ng-show="adsList.loading">Loading...</div>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+            </tr>
+        </thead>
+        <tbody class="adsList_table">
+            <tr ng-repeat="ad in adsList.adsList track by $index">
+                <td data-title="'ID'">{{ad.AdvID}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div ng-show="adsList.noData">查无数据</div>
 </div>

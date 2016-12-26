@@ -369,13 +369,17 @@ font-family: "Segoe UI","Lucida Grande",Helvetica,Arial,"Microsoft YaHei",FreeSa
 
 /*--------------------------------自定义部分----------------------------------------*/
 .adsMaterial.nav li {
-   width:50px;
-   float: left;
-}
-.materialList table tr td {
-   width:260px;
+    width: 50px;
+    float: left;
 }
 
+.materialList table tr td {
+    width: 260px;
+}
+
+.adsPosition_table tr td {
+    width: 300px;
+}
 
 
 

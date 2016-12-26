@@ -1,14 +1,33 @@
-<div ng-controller="adsPositionController as adsPosition" ng-init="adsPosition.init()" class="col-sm-9 page col-right">
-    adsPositionController | 广告位列表<br> 
-    <button ng-click="adsPosition.addPosition()">添加广告位</button>
-
-
-
-
-    <div ng-repeat="position in adsPosition.advPositionList track by $index" ui-sref="app.adsBoard.adsPosition.adsList({PostionID:position.ID})">
-    	广告位名字：{{position.Name}}--广告位描述：{{position.Description}}--广告位模版名字：{{position.AdvPositionTemplateName}}  -- <button ng-click="adsPosition.editPosition(position)">编辑</button>--<button class="btn btn-primary" ng-click="adsPosition.addAdvPositionTagMatrix(position)">标签编辑</button>
-    </div>
+<div ng-controller="adsPositionController as adsPosition" ng-init="adsPosition.init()" class="adsPosition">
+    <strong>广告位列表</strong>
+    <br>
+    <br>
+    <br>
+    <a ng-click="adsPosition.addPosition()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>添加广告位</a>
+    <br>
+    <table>
+        <thead>
+            <tr>
+                <th>名字</th>
+                <th>描述</th>
+                <th>模版</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody class="adsPosition_table">
+            <tr ng-repeat="position in adsPosition.advPositionList track by $index" ui-sref="app.adsBoard.adsPosition.adsList({PostionID:position.ID})">
+                <td data-title="'名字'">{{position.Name}}</td>
+                <td data-title="'描述'">{{position.Description}}</td>
+                <td data-title="'描述'">{{position.AdvPositionTemplateName}}</td>
+                <td data-title="'操作'">
+                    <button ng-click="adsPosition.editPosition(position)" class="btn btn-default">编辑</button>--
+                    <button  ng-click="adsPosition.addAdvPositionTagMatrix(position)" class="btn btn-default">标签编辑</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
     <div ng-show="adsPosition.loading">loading...</div>
     <div ng-show="adsPosition.noData">查无数据</div>
+    <hr class="break-space-double">
     <ui-view></ui-view>
 </div>
