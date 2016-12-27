@@ -1,8 +1,5 @@
 <div ng-controller="editMaterialController as editMaterial" style="position: absolute; top: 0; z-index: 1000; overflow: auto; height: 100%;background-color: rgba(0,0,0,.7);width: 100%;" ng-init="editMaterial.init()">
-    editMaterialController 编辑广告素材
-    <br>
-    <button ng-click="editMaterial.cancel()">关闭</button>
-    <form novalidate ng-submit="addForm.$valid && editMaterial.saveForm()" name="addForm">
+<!--     <form novalidate >
         <div class="row">
             <div ng-controller="lifeStartTimeController as lst" class="col-md-6">
                 广告开始日期:<i class="glyphicon glyphicon-calendar" ng-click="editMaterial.showDatePicker('start')"></i> {{ editMaterial.form.LifeStartTime | date:'yyyy-MM-dd hh:mm:ss' }}
@@ -21,6 +18,76 @@
         时长：<input type="number" name="" required ng-model="editMaterial.form.Duration"><br>
         描述：<input type="text" name="" required ng-model="editMaterial.form.Description"><br>
        
-        <input type="submit" name="" ng-disabled="addForm.$invalid || editMaterial.saving" class="btn btn-primary">
-    </form>
+       
+    </form> -->
+
+    <div class="modal fade in" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display:block">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button ng-click="editMaterial.cancel()" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">编辑广告位</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- info -->
+                    <form novalidate ng-submit="addForm.$valid && editMaterial.saveForm()" name="addForm">
+                        <table class="table table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td>名字</td>
+                                    <td>
+                                        <input type="text" name="" required ng-model="editMaterial.form.Name" class="form-control">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>时长</td>
+                                    <td>
+                                        <input type="text" name="" required ng-model="editMaterial.form.Duration" class="form-control">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>描述</td>
+                                    <td>
+                                        <input type="text" name="" required ng-model="editMaterial.form.Description" class="form-control">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>上传素材</td>
+                                    <td>
+                                        <input type="file" name="" file-Model="adsFile" data-e="none">
+                                         <button class="btn btn-defalut" ng-click="editMaterial.uploadAdsFile()">上传</button><br> 上传进度：
+                                        <span ng-repeat="upload in editMaterial.uploadList.data track by $index">{{upload['file'].percentComplete}}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>广告开始日期</td>
+                                    <td>
+                                        <div ng-controller="lifeStartTimeController as lst" class="col-md-6" style="position: absolute;">
+                                            <i class="glyphicon glyphicon-calendar" ng-click="editMaterial.showDatePicker('start')"></i> {{ editMaterial.form.LifeStartTime | date:'yyyy-MM-dd hh:mm:ss' }}
+                                            <datetimepicker data-ng-model="editMaterial.form.LifeStartTime" data-datetimepicker-config="{ startView:'day', minView:'minute' }" ng-show="editMaterial.startDatePicker" data-on-set-time="editMaterial.onTimeSet('start')" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>广告结束日期</td>
+                                    <td>
+                                        <div ng-controller="lifeEndTimeController as let" class="col-md-6" style="position: absolute;">
+                                            <i class="glyphicon glyphicon-calendar" ng-click="editMaterial.showDatePicker()"></i> {{ editMaterial.form.LifeEndTime | date:'yyyy-MM-dd hh:mm:ss' }}
+                                            <datetimepicker data-ng-model="editMaterial.form.LifeEndTime" data-datetimepicker-config="{ startView:'day', minView:'minute' }" ng-show="editMaterial.endDatePicker" data-on-set-time="editMaterial.onTimeSet()" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <input type="submit" name="" ng-disabled="addForm.$invalid || editMaterial.saving" class="btn btn-primary">
+                                    </td>
+                                </tr>
+                        </table>
+                    </form>
+                    <!-- info end -->
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

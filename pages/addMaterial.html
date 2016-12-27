@@ -33,7 +33,7 @@
                                     <td>上传素材</td>
                                     <td>
                                         <input type="file" name="" file-Model="adsFile" data-e="none">
-                                        <button class="btn btn-primary" ng-click="addMaterial.uploadAdsFile()">上传</button>
+                                        <button class="btn btn-default" ng-click="addMaterial.uploadAdsFile()">上传</button>
                                         <br>
                                         <span ng-repeat="upload in addMaterial.uploadList.data track by $index">{{upload['file'].percentComplete}}</span>
                                     </td>
