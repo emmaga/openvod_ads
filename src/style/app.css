@@ -11,15 +11,11 @@ li,ul,ol {
     color:white;
 }
 .col-left {
-    width: 160px !important;
-    float: left;
-}
-.col-middle {
-    width: 160px !important;
+    width: 220px !important;
     float: left;
 }
 .col-right {
-    width: calc(100% - 160px) !important;
+    width: calc(100% - 220px) !important;
     float: right;
 }
 /*form表格验证*/
@@ -384,7 +380,12 @@ font-family: "Segoe UI","Lucida Grande",Helvetica,Arial,"Microsoft YaHei",FreeSa
     width: 200px;
 }
 
-
+.margin-right-15 {
+  margin-right: 15px;
+}
+.margin-left-15 {
+  margin-left: 15px;
+}
 
 
 

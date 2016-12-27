@@ -3,9 +3,9 @@
     <hr class="break-space-double">
     <a class="btn btn-default" ng-click="adsBoard.addPositionTag()"><i class="glyphicon glyphicon-plus"></i>添加标签</a>
     <div ng-show="adsBoard.loading">loading....</div>
-    <ul class="adsBoard nav">
+<!--     <ul class="adsBoard nav">
         <li>
-            <div ui-sref="app.adsBoard.adsPosition({adsPosition:'all'})">
+            <div >
                 全部
             </div>
         </li>
@@ -15,7 +15,24 @@
                 <button ng-click="adsBoard.editPositionTag(tag)" class="btn btn-default"><i class="glyphicon glyphicon-pencil"></i>编辑</button>
             </div>
         </li>
-    </ul>
+    </ul> -->
+
+        <!-- 分类标签 -->
+        <ul class="nav nav-tabs">
+            <li class="cursor-pointer" ng-class="">
+                <a ng-click="" ui-sref="app.adsBoard.adsPosition({adsPosition:'all'})">全部</a>
+            </li>
+            <li class="cursor-pointer" ng-class="" ng-repeat="tag in adsBoard.positionTags track by $index" >
+                <a ui-sref="app.adsBoard.adsPosition({adsPosition:tag.ID})">{{tag.TagName}}&nbsp;<i class="glyphicon glyphicon-edit" ng-click="adsBoard.editPositionTag(tag)"></i></a>
+                
+            </li>
+            <li class="cursor-pointer" ng-class="" >
+                <a ng-click="adsBoard.addPositionTag()">
+                    <i class="icon ion-android-add-circle"></i> 分类添加
+                </a>
+            </li>
+        </ul>
+        <!-- tab-content start -->
     <hr class="break-space-double">
     <hr class="break-space-double">
     <hr class="break-space-double">
