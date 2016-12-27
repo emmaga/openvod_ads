@@ -1,26 +1,72 @@
 <div ng-controller="addMaterialController as addMaterial" style="position: absolute; top: 0; z-index: 1000; overflow: auto; height: 100%;background-color: rgba(0,0,0,.7);width: 100%;" ng-init="addMaterial.init()">
-    addMaterialController 添加广告素材
-    <br>
-    <button ng-click="addMaterial.cancel()">关闭</button>
-    <form novalidate ng-submit="addForm.$valid && addMaterial.saveForm()" name="addForm">
-        <div class="row">
-            <div ng-controller="lifeStartTimeController as lst" class="col-md-6">
-                广告开始日期:<i class="glyphicon glyphicon-calendar" ng-click="addMaterial.showDatePicker('start')"></i> {{ addMaterial.form.LifeStartTime | date:'yyyy-MM-dd hh:mm:ss' }}
-                <datetimepicker data-ng-model="addMaterial.form.LifeStartTime" data-datetimepicker-config="{ startView:'day', minView:'minute' }" ng-show="addMaterial.startDatePicker" data-on-set-time="addMaterial.onTimeSet('start')" />
-            </div>
-            <div ng-controller="lifeEndTimeController as let" class="col-md-6">
-                广告结束日期:<i class="glyphicon glyphicon-calendar" ng-click="addMaterial.showDatePicker()"></i> {{ addMaterial.form.LifeEndTime | date:'yyyy-MM-dd hh:mm:ss' }}
-                <datetimepicker data-ng-model="addMaterial.form.LifeEndTime" data-datetimepicker-config="{ startView:'day', minView:'minute' }" ng-show="addMaterial.endDatePicker" data-on-set-time="addMaterial.onTimeSet()" />
+    <div class="modal fade in" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display:block">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button ng-click="addMaterial.cancel()" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">添加广告位</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- info -->
+                    <form novalidate ng-submit="addForm.$valid && addMaterial.saveForm()" name="addForm">
+                        <table class="table table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td>名字</td>
+                                    <td>
+                                        <input type="text" name="" required ng-model="addMaterial.form.Name" class="form-control">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>时长</td>
+                                    <td>
+                                        <input type="text" name="" required ng-model="addMaterial.form.Duration" class="form-control">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>描述</td>
+                                    <td>
+                                        <input type="text" name="" required ng-model="addMaterial.form.Description" class="form-control">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>上传素材</td>
+                                    <td>
+                                        <input type="file" name="" file-Model="adsFile" data-e="none">
+                                        <button class="btn btn-primary" ng-click="addMaterial.uploadAdsFile()">上传</button>
+                                        <br>
+                                        <span ng-repeat="upload in addMaterial.uploadList.data track by $index">{{upload['file'].percentComplete}}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>广告开始日期</td>
+                                    <td>
+                                        <div ng-controller="lifeStartTimeController as lst" class="col-md-6" style="position: absolute;">
+                                            <i class="glyphicon glyphicon-calendar" ng-click="addMaterial.showDatePicker('start')"></i> {{ addMaterial.form.LifeStartTime | date:'yyyy-MM-dd hh:mm:ss' }}
+                                            <datetimepicker data-ng-model="addMaterial.form.LifeStartTime" data-datetimepicker-config="{ startView:'day', minView:'minute' }" ng-show="addMaterial.startDatePicker" data-on-set-time="addMaterial.onTimeSet('start')" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>广告结束日期</td>
+                                    <td>
+                                        <div ng-controller="lifeEndTimeController as let" class="col-md-6" style="position: absolute;">
+                                            <i class="glyphicon glyphicon-calendar" ng-click="addMaterial.showDatePicker()"></i> {{ addMaterial.form.LifeEndTime | date:'yyyy-MM-dd hh:mm:ss' }}
+                                            <datetimepicker data-ng-model="addMaterial.form.LifeEndTime" data-datetimepicker-config="{ startView:'day', minView:'minute' }" ng-show="addMaterial.endDatePicker" data-on-set-time="addMaterial.onTimeSet()" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <input type="submit" name="" ng-disabled="addForm.$invalid || addMaterial.saving" class="btn btn-primary">
+                                    </td>
+                                </tr>
+                        </table>
+                    </form>
+                    <!-- info end -->
+                </div>
             </div>
         </div>
-        <input type="file" name="" file-Model="adsFile" data-e="none">
-         <button class="btn btn-primary" ng-click="addMaterial.uploadAdsFile()">上传</button><br> 上传进度：
-        <span ng-repeat="upload in addMaterial.uploadList.data track by $index">{{upload['file'].percentComplete}}</span>
-        <br>
-        名称：<input type="text" name="" required ng-model="addMaterial.form.Name"><br>
-        时长：<input type="number" name="" required ng-model="addMaterial.form.Duration"><br>
-        描述：<input type="text" name="" required ng-model="addMaterial.form.Description"><br>
-       
-        <input type="submit" name="" ng-disabled="addForm.$invalid || addMaterial.saving" class="btn btn-primary">
-    </form>
+    </div>
 </div>
