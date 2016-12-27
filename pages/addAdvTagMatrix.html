@@ -1,12 +1,35 @@
 <div ng-controller="addAdvTagMatrixController as aATM" style="position: absolute; top: 0; z-index: 1000; overflow: auto; height: 100%;width: 100%; background-color: rgba(0,0,0,.6);" ng-init="aATM.init()">
-    addAdvTagMatrixController 广告 添加/编辑 广告标签(全添加)
-    <br>
-    <br>
-    <button ng-click="aATM.cancel()">关闭</button>
-    <form novalidate ng-submit="addForm.$valid && aATM.addAdvTagMatrix()" name="addForm">
-        <div ng-repeat="tag in aATM.advTagList track by $index">
-        	<input type="checkbox" name="" ng-model="aATM.advTagList[$index].checked" ng-checked="aATM.advTagList[$index].checked">{{tag.TagName}}
+    <div class="modal fade in" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display:block">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button ng-click="aATM.cancel()" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">广告位标签</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- info -->
+                    <form novalidate ng-submit="addForm.$valid && aATM.addAdvTagMatrix()" name="addForm">
+                        <table class="table table-condensed">
+                            <tbody>
+                                <tr ng-repeat="tag in aATM.advTagList track by $index">
+                                    <td>
+                                        <input type="checkbox" name="" ng-model="aATM.advTagList[$index].checked" ng-checked="aATM.advTagList[$index].checked">
+                                    </td>
+                                    <td>
+                                        {{tag.TagName}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <input type="submit" name="" ng-disabled="aATM.saving">
+                                    </td>
+                                </tr>
+                        </table>
+                    </form>
+                    <!-- info end -->
+                </div>
+            </div>
         </div>
-         <input type="submit" name="" ng-disabled="aATM.saving">
-    </form>
+    </div>
 </div>

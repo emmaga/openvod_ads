@@ -7,13 +7,13 @@
         </div>
          
     </form> -->
-    <div class="container-fluid">
+    <!-- <div class="container-fluid">
         <div class="row">
             <div class="center-block fixed-width-5 fixed-width-5">
                 <div class="panel panel-default center-block">
                     <div class="panel-heading">
-                    <i class="glyphicon glyphicon-remove" ng-click="aAPTM.cancel()" class="btn btn-default" style="float:right"></i>
-                        <h3 class="panel-title">添加广告位标签</h3> 
+                    <i class="glyphicon glyphicon-remove" ng-click="" class="btn btn-default" style="float:right"></i>
+                        <h3 class="panel-title">广告位标签</h3> 
                     </div>
                     <div class="panel-body">
                         <form novalidate ng-submit="addForm.$valid && aAPTM.addAdvPositionTagMatrix()" name="addForm">
@@ -32,6 +32,40 @@
                         </form>
                         <div ng-show="login.loading">loading...</div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+
+    <div class="modal fade in" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display:block">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button ng-click="aAPTM.cancel()" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">广告位标签</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- info -->
+                    <form novalidate ng-submit="addForm.$valid && aAPTM.addAdvPositionTagMatrix()" name="addForm">
+                        <table class="table table-condensed">
+                            <tbody>
+                                <tr ng-repeat="tag in aAPTM.advPositionTagList track by $index">
+                                    <td><input type="checkbox" name="" ng-model="aAPTM.advPositionTagList[$index].checked" ng-checked="aAPTM.advPositionTagList[$index].checked"></td>
+                                    <td>
+                                        {{tag.TagName}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <input type="submit" name="" ng-disabled="aAPTM.saving" class="btn btn-primary">
+                                    </td>
+                                </tr>
+                        </table>
+                    </form>
+                    <!-- info end -->
+                    <div ng-show="login.loading">loading...</div>
                 </div>
             </div>
         </div>
