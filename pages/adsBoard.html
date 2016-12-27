@@ -3,14 +3,14 @@
     <hr class="break-space-double">
     <a class="btn btn-default" ng-click="adsBoard.addPositionTag()"><i class="glyphicon glyphicon-plus"></i>添加标签</a>
     <div ng-show="adsBoard.loading">loading....</div>
-    <ul class="adsMaterial nav">
+    <ul class="adsBoard nav">
         <li>
             <div ui-sref="app.adsBoard.adsPosition({adsPosition:'all'})">
                 全部
             </div>
         </li>
-        <li ng-repeat="advTag in adsMaterial.advTagList track by $index">
-            <div ng-repeat="tag in adsBoard.positionTags track by $index" ui-sref="app.adsBoard.adsPosition({adsPosition:tag.ID})">
+        <li ng-repeat="tag in adsBoard.positionTags track by $index">
+            <div  ui-sref="app.adsBoard.adsPosition({adsPosition:tag.ID})">
                 {{tag.TagName}} --
                 <button ng-click="adsBoard.editPositionTag(tag)" class="btn btn-default"><i class="glyphicon glyphicon-pencil"></i>编辑</button>
             </div>
