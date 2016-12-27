@@ -1,10 +1,5 @@
 <div ng-controller="editPositionController as editPosition" style="position: absolute; top: 0; z-index: 1000; overflow: auto; height: 100%;width: 100%; background-color: rgba(0,0,0,.6);" ng-init="editPosition.init()">
-    editPositionController 编辑广告位
-    <br>
-
-    <br>
-    <button ng-click="editPosition.cancel()">关闭</button>
-    <form novalidate ng-submit="addForm.$valid && editPosition.editAdvPosition()" name="addForm">
+    <!-- <form novalidate ng-submit="addForm.$valid && editPosition.editAdvPosition()" name="addForm">
         <select ng-options="(template.AdvPositionTemplateName+template.AdvPositionTemplateDesc) for template in editPosition.form.templateList " ng-model="editPosition.form.AdvPositionTemplate" required></select>
         <br> 名字：
         <input type="text" name="" required ng-model="editPosition.form.Name">
@@ -15,7 +10,7 @@
         <br> ScheduleType：
         <input type="text" name="" required ng-model="editPosition.form.ScheduleType">
         <br>
-        <!-- datetimepicker作用域问题，没有独立作用域，暂时这样处理 -->
+        datetimepicker作用域问题，没有独立作用域，暂时这样处理
         <div class="row">
             <div ng-controller="lifeStartTimeController as lst" class="col-md-6">
                 广告开始日期:<i class="glyphicon glyphicon-calendar" ng-click="editPosition.showDatePicker('start')"></i> {{ editPosition.form.LifeStartTime | date:'yyyy-MM-dd hh:mm:ss' }}
@@ -28,4 +23,79 @@
         </div>
         <input type="submit" name="" ng-disabled="addForm.$invalid || editPosition.saving" class="btn btn-primary">
     </form>
+     -->
+    <div class="modal fade in" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display:block">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button ng-click="editPosition.cancel()" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">编辑广告位</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- info -->
+                    <form novalidate ng-submit="addForm.$valid && editPosition.editAdvPosition()" name="addForm">
+                        <table class="table table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td>广告标识</td>
+                                    <td>
+                                        <select ng-options="(template.AdvPositionTemplateName+template.AdvPositionTemplateDesc) for template in editPosition.form.templateList " ng-model="editPosition.form.AdvPositionTemplate" required class="form-control"></select>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>名字</td>
+                                    <td>
+                                      <input type="text" name="" required ng-model="editPosition.form.Name" class="form-control">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>描述</td>
+                                    <td>
+                                        <input type="text" name="" required ng-model="editPosition.form.Description" class="form-control">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ScheduleTypeParam</td>
+                                    <td>
+                                        <input type="text" name="" required ng-model="editPosition.form.ScheduleTypeParam" class="form-control">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ScheduleType</td>
+                                    <td>
+                                        <input type="text" name="" required ng-model="editPosition.form.ScheduleType" class="form-control">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>广告开始日期</td>
+                                    <td>
+                                          <div ng-controller="lifeStartTimeController as lst" style="position: absolute;">
+                                              <i class="glyphicon glyphicon-calendar" ng-click="editPosition.showDatePicker('start')"></i> {{ editPosition.form.LifeStartTime | date:'yyyy-MM-dd hh:mm:ss' }}
+                                              <datetimepicker data-ng-model="editPosition.form.LifeStartTime" data-datetimepicker-config="{ startView:'day', minView:'minute' }" ng-show="editPosition.startDatePicker" data-on-set-time="editPosition.onTimeSet('start')" />
+                                          </div> 
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>广告结束日期</td>
+                                    <td>
+                                        <div ng-controller="lifeEndTimeController as let"  style="position: absolute;">
+                                            <i class="glyphicon glyphicon-calendar" ng-click="editPosition.showDatePicker()"></i> {{ editPosition.form.LifeEndTime | date:'yyyy-MM-dd hh:mm:ss' }}
+                                            <datetimepicker data-ng-model="editPosition.form.LifeEndTime" data-datetimepicker-config="{ startView:'day', minView:'minute' }" ng-show="editPosition.endDatePicker" data-on-set-time="editPosition.onTimeSet()" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <input type="submit" name="" ng-disabled="addForm.$invalid || aPT.saving" class="btn btn-primary" >
+                                    </td>
+                                </tr>
+                        </table>
+                    </form>
+                    <!-- info end -->
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
