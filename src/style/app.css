@@ -13,6 +13,7 @@ li,ul,ol {
 .col-left {
     width: 220px !important;
     float: left;
+
 }
 .col-right {
     width: calc(100% - 220px) !important;
@@ -212,17 +213,6 @@ tbody th{
   opacity: 0;
   margin-top:22px;
   margin-bottom: 22px;
-}
-
-
-.col-left{
-  width: 160px !important;
-  float: left;
-}
-
-.col-right{
-  width: calc(100% - 160px) !important;
-  float: right;
 }
 
 .hr-half{

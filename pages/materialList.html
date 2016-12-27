@@ -1,8 +1,7 @@
 <div ng-controller="materialListController as materialList" ng-init="materialList.init()" class="materialList">
-    <strong>广告投放</strong>
+<!--     <br>
     <br>
-    <br>
-    <a class="btn btn-default" ng-click="materialList.addMaterial()"><i class="glyphicon glyphicon-plus"></i>上传素材</a>
+    <a class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>上传素材</a>
     <div ng-show="materialList.loading">Loading...</div>
     <table ng-table="materialList.tableParams" class="materialList_table">
         <thead>
@@ -24,5 +23,33 @@
             </tr>
         </tbody>
     </table>
-    <div ng-show="materialList.noData">查无数据</div>
+    <div ng-show="materialList.noData">查无数据</div> -->
+
+
+    <hr class="break-space-double">
+        <a  ng-click="materialList.addMaterial()"><i class="glyphicon glyphicon-plus"></i>上传素材</a>
+        <hr class="break-space-double">
+        <table class="table" ng-table="materialList.tableParams">
+            <thead>
+                <tr>
+                   <th>名字</th>
+                   <th>周期</th>
+                   <th>操作</th>
+                </tr>
+            </thead>
+            <tbody class="adsPosition_table">
+                <tr ng-repeat="material in $data track by $index">
+                    <td data-title="'名字'">{{material.Name}}</td>
+                    <td data-title="'周期'">{{material.LifeStartTime}}~{{material.LifeEndTime}}</td>
+                    <td data-title="'操作'">
+                        <button class="btn btn-default" ng-click="materialList.editMaterial(material)" ><i class="glyphicon glyphicon-pencil"></i>编辑</button>
+                            <button class="btn btn-default" ng-click="materialList.addAdvTagMatrix(material)"><i class="glyphicon glyphicon-pencil"></i>标签编辑</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div ng-show="materialList.loading">loading...</div>
+        <div ng-show="materialList.noData">查无数据</div>
+        <hr class="break-space-double">
+        <ui-view></ui-view>
 </div>

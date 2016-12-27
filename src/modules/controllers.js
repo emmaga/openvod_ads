@@ -112,7 +112,7 @@
                 $scope.app.maskUrl = 'pages/addPositionTag.html';
             }
             
-            self.editPositionTag = function(tag){
+            self.editPositionTag = function(tag,$event){
                 $scope.app.maskUrl = 'pages/editPositionTag.html';
                 $scope.app.params = tag;
             }
