@@ -7,6 +7,7 @@
                     <h4 class="modal-title" id="myModalLabel">广告位标签</h4>
                 </div>
                 <div class="modal-body">
+                   <div ng-show="aATM.loading">loading...</div>
                     <!-- info -->
                     <form novalidate ng-submit="addForm.$valid && aATM.addAdvTagMatrix()" name="addForm">
                         <table class="table table-condensed">
