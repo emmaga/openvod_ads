@@ -113,6 +113,8 @@
             }
             
             self.editPositionTag = function(tag,$event){
+                $event.stopPropagation();
+                $event.preventDefault();
                 $scope.app.maskUrl = 'pages/editPositionTag.html';
                 $scope.app.params = tag;
             }
@@ -1064,7 +1066,10 @@
                 $scope.app.maskUrl = 'pages/addAdvTag.html';
             }
 
-            self.editAdvTag = function(advTag){
+            self.editAdvTag = function(advTag,$event){
+                // 阻止 默认事件的传播
+                $event.stopPropagation();
+                $event.preventDefault();
                 $scope.app.maskUrl = 'pages/editAdvTag.html';
                 $scope.app.params = advTag;
             }

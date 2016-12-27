@@ -27,7 +27,7 @@
             <a ng-click="" ui-sref="app.adsMaterial.materialList({advTag:'all'})">全部标签</a>
         </li>
         <li class="cursor-pointer" ng-class="" ng-repeat="advTag in adsMaterial.advTagList track by $index">
-            <a ui-sref="app.adsMaterial.materialList({advTag:advTag.ID})">{{advTag.TagName}}&nbsp;<i class="glyphicon glyphicon-edit" ng-click="adsMaterial.editAdvTag(advTag)"></i></a>
+            <a ui-sref="app.adsMaterial.materialList({advTag:advTag.ID})">{{advTag.TagName}}&nbsp;<i class="glyphicon glyphicon-edit" ng-click="adsMaterial.editAdvTag(advTag,$event)"></i></a>
         </li>
         <li class="cursor-pointer" ng-class="">
             <a ng-click="adsMaterial.addAdvTag()"">

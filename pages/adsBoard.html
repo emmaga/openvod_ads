@@ -8,7 +8,7 @@
             <a ng-click="" ui-sref="app.adsBoard.adsPosition({adsPosition:'all'})">全部标签</a>
         </li>
         <li class="cursor-pointer" ng-class="" ng-repeat="tag in adsBoard.positionTags track by $index">
-            <a ui-sref="app.adsBoard.adsPosition({adsPosition:tag.ID})">{{tag.TagName}}&nbsp;<i class="glyphicon glyphicon-edit" ng-click="adsBoard.editPositionTag(tag)"></i></a>
+            <a ui-sref="app.adsBoard.adsPosition({adsPosition:tag.ID})">{{tag.TagName}}&nbsp;<i class="glyphicon glyphicon-edit" ng-click="adsBoard.editPositionTag(tag,$event)"></i></a>
         </li>
         <li class="cursor-pointer" ng-class="">
             <a ng-click="adsBoard.addPositionTag()">
