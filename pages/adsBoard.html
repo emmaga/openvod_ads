@@ -1,7 +1,7 @@
 <div ng-controller="adsBoardController as adsBoard" ng-init="adsBoard.init()" class="col-sm-9">
     <strong>广告投放</strong>
     <hr class="break-space-double">
-    <a class="btn btn-default" ng-click="adsMaterial.addPositionTag()"><i class="glyphicon glyphicon-plus"></i>添加标签</a>
+    <a class="btn btn-default" ng-click="adsBoard.addPositionTag()"><i class="glyphicon glyphicon-plus"></i>添加标签</a>
     <div ng-show="adsBoard.loading">loading....</div>
     <ul class="adsMaterial nav">
         <li>

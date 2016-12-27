@@ -1,12 +1,39 @@
 <div ng-controller="addAdvPositionTagMatrixController as aAPTM" style="position: absolute; top: 0; z-index: 1000; overflow: auto; height: 100%;width: 100%; background-color: rgba(0,0,0,.6);" ng-init="aAPTM.init()">
-    addAdvPositionTagMatrixController 广告位 添加/编辑 广告位标签(全添加)
     <br>
     <br>
-    <button ng-click="aAPTM.cancel()">关闭</button>
-    <form novalidate ng-submit="addForm.$valid && aAPTM.addAdvPositionTagMatrix()" name="addForm">
+    <!--    <form>
         <div ng-repeat="tag in aAPTM.advPositionTagList track by $index">
-        	<input type="checkbox" name="" ng-model="aAPTM.advPositionTagList[$index].checked" ng-checked="aAPTM.advPositionTagList[$index].checked">{{tag.TagName}}
+            <input type="checkbox" name="" ng-model="aAPTM.advPositionTagList[$index].checked" ng-checked="aAPTM.advPositionTagList[$index].checked">{{tag.TagName}}
         </div>
-         <input type="submit" name="" ng-disabled="aAPTM.saving">
-    </form>
+         
+    </form> -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="center-block fixed-width-5 fixed-width-5">
+                <div class="panel panel-default center-block">
+                    <div class="panel-heading">
+                    <i class="glyphicon glyphicon-remove" ng-click="aAPTM.cancel()" class="btn btn-default" style="float:right"></i>
+                        <h3 class="panel-title">添加广告位标签</h3> 
+                    </div>
+                    <div class="panel-body">
+                        <form novalidate ng-submit="addForm.$valid && aAPTM.addAdvPositionTagMatrix()" name="addForm">
+                            <div class="control-group">
+                                <div ng-repeat="tag in aAPTM.advPositionTagList track by $index">
+                                    <input type="checkbox" name="" ng-model="aAPTM.advPositionTagList[$index].checked" ng-checked="aAPTM.advPositionTagList[$index].checked">{{tag.TagName}}
+                                </div>
+                            </div>
+                            <hr class="break-space">
+                            <div class="control-group">
+                                <input type="submit" name="" ng-disabled="aAPTM.saving" class="btn btn-primary">
+                            </div>
+                            <div class="control-group">
+                                
+                            </div>
+                        </form>
+                        <div ng-show="login.loading">loading...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

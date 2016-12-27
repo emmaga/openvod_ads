@@ -4,7 +4,7 @@
     <br>
     <a class="btn btn-default" ng-click="materialList.addMaterial()"><i class="glyphicon glyphicon-plus"></i>上传素材</a>
     <div ng-show="materialList.loading">Loading...</div>
-    <table ng-table="materialList.tableParams">
+    <table ng-table="materialList.tableParams" class="materialList_table">
         <thead>
             <tr>
                 <th>素材名称</th>
@@ -17,8 +17,9 @@
                 <td data-title="'素材名称'">{{material.Name}}</td>
                 <td data-title="'周期'">{{material.LifeStartTime}}~{{material.LifeEndTime}}</td>
                 <td data-title="'操作'">
-                    <button class="btn btn-primary" ng-click="materialList.addAdvTagMatrix(material)">标签编辑</button>
-                    <button class="btn btn-primary" ng-click="materialList.editMaterial(material)">编辑</button>
+                <button class="btn btn-default" ng-click="materialList.editMaterial(material)" ><i class="glyphicon glyphicon-pencil"></i>编辑</button>
+                    <button class="btn btn-default" ng-click="materialList.addAdvTagMatrix(material)"><i class="glyphicon glyphicon-pencil"></i>标签编辑</button>
+                    
                 </td>
             </tr>
         </tbody>

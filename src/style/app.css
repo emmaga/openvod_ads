@@ -378,7 +378,10 @@ font-family: "Segoe UI","Lucida Grande",Helvetica,Arial,"Microsoft YaHei",FreeSa
 }
 
 .adsPosition_table tr td {
-    width: 300px;
+    width: 200px;
+}
+.materialList_table tr td {
+    width: 200px;
 }
 
 
