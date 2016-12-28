@@ -4,15 +4,17 @@
     <hr class="break-space-double">
 
     <div ng-show="adsList.loading">Loading...</div>
-    <table>
+    <table class="table">
         <thead>
             <tr>
                 <th>ID</th>
+                <th>Name</th>
             </tr>
         </thead>
         <tbody class="adsList_table">
             <tr ng-repeat="ad in adsList.adsList track by $index">
                 <td data-title="'ID'">{{ad.AdvID}}</td>
+                <td data-title="'Name'">{{ad.Name}}</td>
             </tr>
         </tbody>
     </table>
