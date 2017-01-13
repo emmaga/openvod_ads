@@ -53,6 +53,10 @@
             }
 
             self.goToState = function(stateName) {
+                // 点击当前的路由，则直接return;
+                if (!$state.current.name.indexOf(stateName)) {
+                    return;
+                }
                 //默认加载路由
                 stateName = stateName || 'app.adsBoard';
                 $state.go(stateName)
