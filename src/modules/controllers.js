@@ -1505,7 +1505,7 @@
             self.uploadAdsFile = function() {
                 if (!$scope.adsFile) {
                     alert('请选择图片');
-                    return;
+                    return false;
                 }
                 self.uploadList.uploadFile($scope.adsFile, self.uploadList);
             }

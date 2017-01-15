@@ -8,7 +8,7 @@
                 </div>
                 <div class="modal-body">
                     <!-- info -->
-                    <form novalidate ng-submit="addForm.$valid && addMaterial.saveForm()" name="addForm">
+                    <form novalidate name="addForm">
                         <table class="table table-condensed">
                             <tbody>
                                 <tr>
@@ -59,7 +59,7 @@
                                 <tr>
                                     <td></td>
                                     <td>
-                                        <input type="submit" name="" ng-disabled="addForm.$invalid || addMaterial.saving" class="btn btn-primary">
+                                        <input  value="保存" ng-disabled="addForm.$invalid || addMaterial.saving" class="btn btn-primary" ng-click="addMaterial.saveForm()">
                                     </td>
                                 </tr>
                         </table>
