@@ -866,7 +866,7 @@
                                 //     self.noData = true;
                                 //     return;
                                 // }
-                                params.total(msg.data.materialList);
+                                params.total(msg.data.materialTotal);
                                 return msg.data.materialList;
                             } else if (msg.rescode == "401") {
                                 alert('访问超时，请重新登录');
